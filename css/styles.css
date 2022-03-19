@@ -1,0 +1,90 @@
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.topnav {
+    overflow: hidden;
+    background: linear-gradient(45deg, #aaa, #333);
+    
+}
+
+.topnav a {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 10px 20px;
+    text-decoration: none;
+    font-size: 17px;
+    transform: skew(-20deg);
+}
+
+.topnav a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+.topnav a.main {
+    color: white;
+    background: linear-gradient(45deg, #2255aa, #112266);
+}
+
+.topnav a.start {
+    margin-left: -1%;
+}
+
+.topnav a.end {
+    margin-right: -1%;
+}
+
+.topnav a.auth {
+    float: right;
+}
+
+img.logo {
+    height: 10%;
+    width: 50%;
+    border-radius: 50%;
+    border: 3px solid #333;
+    margin-left: 10%;
+    margin-top: 1%;
+}
+
+div.sidenav {
+    width: 10em;
+    background-color: #f1f1f1;
+    float: left;
+}
+
+ul.sidenav {
+    list-style-type: none;
+    padding-left: 0px;
+}
+
+li.sidenav {
+    padding-left: 0px;
+}
+
+li.sidenav a {
+    display: block;
+    color: #000;
+    padding: 8px 0px;
+    text-decoration: none;
+}
+
+/* Change the link color on hover */
+li.sidenav a:hover {
+    background-color: #555;
+    color: white;
+}
+
+div.main{
+    margin-left: 11em;
+    padding-top: 5px;
+}
+
+div.sidenav input {
+    width: 90%;
+    margin-left: 1%;
+    padding: 2% 2% 2% 2%;
+}
