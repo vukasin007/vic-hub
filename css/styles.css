@@ -37,7 +37,7 @@ div.topnav a.auth {
 }
 
 div.sidenav {
-    display: inline-block;
+    display: inline-block; 
     background-color: #aaa;
     overflow-y: scroll;
     overflow-x: hidden;
@@ -82,6 +82,7 @@ div.image {
 }
 
 div.main{
+    vertical-align: top;
     display: inline-block;
 }
 
