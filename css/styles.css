@@ -1,89 +1,170 @@
 body {
     margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-
-div.topnav {
+.topnav {
     overflow: hidden;
-    background: linear-gradient(45deg, #aaa, #333);
+    background-color: #333;
+    width: 100%;
+    background: linear-gradient(90deg, #333, #777);
 }
 
-div.topnav a {
+.topnav a {
     float: left;
-    color: #eee;
+    color: #f2f2f2;
     text-align: center;
-    padding: 10px 20px;
     text-decoration: none;
-    font-size: 17px;
-    font-weight: bold;
-    font-family: Helvetica;
-    transform: skew(-20deg);
-    border: 1px solid #222;
-}
-
-div.topnav a:hover {
-    background-color: #ddd;
     font-size: 18px;
-    color: #222;
+    font-weight: bold;
+    transform: skew(-30deg);
+    padding: 0 1em 0 1em;
 }
 
-div.topnav a.main {
-    background: linear-gradient(45deg, #2255aa, #112266);
+.unskew {
+    transform: skew(30deg);
 }
 
-div.topnav a.auth {
-    float: right;
+.topnav a.right {
+    float: right !important;
 }
 
-div.sidenav {
-    display: inline-block; 
-    background-color: #aaa;
-    overflow-y: scroll;
-    overflow-x: hidden;
+.topnav a.main {
+    background: linear-gradient(45deg, #44e, #88e);
+}
+
+.topnav a:hover {
+    background-color: #ddd;
+    color: black;
+    font-weight: bolder;
+}
+
+.topnav a.main:hover {
+    color: #f2f2f2 !important;
+    background: linear-gradient(45deg, #88e, #44e);
+}
+
+.topnav a.active {
+    background-color: #04AA6D;
+    color: white;
+}
+
+.content {
+    font-size: 30px;
+    text-align: center;
+    color: #eee;
+    opacity: 1;
+}
+
+.content::after {
+    content: "";
+    background: url("./background.jpg");
+    background-attachment: fixed;
     position: fixed;
+    opacity: 0.6;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: -1;
+}
+
+.welcome {
+    font-size: 50px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.welcome button {
+    font-size: 40px;
+    padding: 1em 1em 1em 1em;
+    color: #eee;
+    background: linear-gradient(45deg, #88e, #44e);
+    border-radius: 15px;
+    font-weight: bold;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+
+}
+
+.sidenav {
+    display: inline-block;
+    position: fixed;
+    overflow: hidden;
+}
+
+.categoriesList {
+    display: inline-block;
+    background-color: #04AA6D;
+    overflow-x: hidden;
+    overflow-y: scroll;
     height: 100%;
 }
 
-div.sidenav a {
-    display: block;
-    color: #000;
-    padding: 10px 20px;
-    text-decoration: none;
-    font-size: 16px;
-}
-
-div.sidenav a:hover {
-    background-color: #333;
-    color: white;
+.inputlabel {
     font-size: 18px;
-}
-
-div.sidenav input {
-    padding: 4% 4%;
-    font-size: 18px;
-    width: 90%;
-}
-
-img.logo {
-    width: 80%;
-    height: auto;
-    border-radius: 40%;
-    border: 3px solid #333;
-}
-
-div.input {
-    padding: 5% 5%;
-}
-
-div.image {
-    display: flex;
-    justify-content: center;
-}
-
-div.main{
-    vertical-align: top;
+    color: #fff;
+    font-weight: bold;
+    background: linear-gradient(45deg, #99f, #22d);
     display: inline-block;
+    border-radius: 15px;
+    padding: 1.5em;
+    text-align: center;
 }
 
+.profile {
+    text-align: center;
+}
 
+.profilepic {
+    width: 5em;
+    height: auto;
+    border-radius: 100%;
+}
+
+.welcome input {
+    padding: 0.5em;
+    font-size: 18px;
+    width: 18em;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    border-radius: 15px;
+}
+
+.users {
+    list-style-type: none;
+    display: flexbox;
+}
+
+div.users {
+    margin-left: 10em;
+    margin-right: 10em;
+}
+
+li.inputlabel {
+    display: block;
+    margin: 1em;
+    text-align: left;
+    padding: 1em;
+}
+
+li.inputlabel a {
+    float: right;
+    color: #fff;
+    text-decoration: none;
+    margin-right: 1em;
+}
+
+.jokecontent {
+    margin-top: 7em;
+}
+
+.jokecontent textarea {
+    font-size: 15px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: #44e;
+    font-weight: bold;
+    padding: 1em;
+}
+
+div.joke {
+    width: 30em !important;
+    margin: 2em !important;
+}
