@@ -58,7 +58,7 @@ body {
 
 .content::after {
     content: "";
-    background: url("./background.jpg");
+    background: url("../img/background.jpg");
     background-attachment: fixed;
     position: fixed;
     opacity: 0.6;
@@ -162,9 +162,26 @@ li.inputlabel a {
     color: #44e;
     font-weight: bold;
     padding: 1em;
+    border-radius: 10px;
 }
 
 div.joke {
     width: 30em !important;
     margin: 2em !important;
 }
+
+.submission {
+    text-decoration: none;
+    background: linear-gradient(45deg, #99f, #22d);
+    padding: 1em;
+    border-radius: 10px;
+    color: #fff;
+    margin-block-start: 4em;
+}
+
+.submitauth {
+    background: #bbb !important;
+    color: #44e;
+    font-weight: bold;
+}
+
