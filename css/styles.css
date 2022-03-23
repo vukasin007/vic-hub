@@ -56,7 +56,7 @@ body {
     text-align: center;
     color: #eee;
     opacity: 1;
-    padding-top: 20px;
+    padding-top: 20px; /*izmenjeno*/
 }
 
 .content::after {
@@ -188,3 +188,29 @@ div.joke {
     font-weight: bold;
 }
 
+/* odavde sam dodao*/
+
+.inputlabel2 {
+    font-size: 18px;
+    color: #fff;
+    font-weight: bold;
+    background: linear-gradient(45deg, #99f, #22d);
+    display: inline-block;
+    border-radius: 15px;
+    padding: 1.5em;
+    text-align: center;
+}
+
+li.inputlabel2 {
+    display: block;
+    margin: 1em;
+    text-align: center;
+    padding: 1em;
+}
+
+li.inputlabel2 a {
+    float: center;
+    color: #fff;
+    text-decoration: none;
+    
+}
