@@ -8,6 +8,8 @@ body {
     background-color: #333;
     width: 100%;
     background: linear-gradient(90deg, #333, #777);
+    position: fixed;
+    top: 0px;
 }
 
 .topnav a {
@@ -54,6 +56,7 @@ body {
     text-align: center;
     color: #eee;
     opacity: 1;
+    padding-top: 20px;
 }
 
 .content::after {
