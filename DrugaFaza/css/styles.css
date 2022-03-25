@@ -214,3 +214,27 @@ li.inputlabel2 a {
     text-decoration: none;
     
 }
+
+.singlejoke{
+    width: 50em !important;
+    margin: 1em !important;
+}
+
+.table-for-joke{
+    width: 100%;
+    text-align: center; 
+}
+
+.comment{
+    width: 30em !important;
+    margin-bottom: 1em !important;
+    font-size: 18px;
+    color: #fff;
+    font-weight: bold;
+    background: linear-gradient(45deg, #99f, #22d);
+    display: inline-block;
+    border-radius: 15px;
+    padding: 1.5em;
+    text-align: center !important;
+    align-self: center !important;
+}
