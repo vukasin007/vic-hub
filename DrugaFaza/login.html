@@ -13,8 +13,8 @@
     <div class="topnav">
         <a href="./index.html" class="main"><p class="unskew">VicHub</p></a>
         <a href="./categories.html"><p class="unskew">Citaj viceve</p></a>
-        <a href="./add_joke.html"><p class="unskew">Dodaj vic</p></a>
-       <a href="#"><p class="unskew">Opcija levo</p></a>
+        <!--- <a href="./add_joke.html"><p class="unskew">Dodaj vic</p></a>
+       <a href="#"><p class="unskew">Opcija levo</p></a>--->
 
         <a href="./login.html" class="right main"><p class="unskew">Prijavite se</p></a>
         <a href="./register.html" class="right main"><p class="unskew">Registrujte se</p></a>
@@ -23,10 +23,13 @@
     <div class="welcome content">
         <h2>Prijava</h2>
         <div class="inputlabel">
-            <form action="">
+            <form action="logged_index.html">
                 <label for="">Korisnicko ime ili email:&nbsp;</label><input type="text" placeholder="Korisnicko ime ili email..." class="data"><br><br>
                 <label for="">Lozinka:&nbsp;</label><input type="password" placeholder="*************" class="data"><br>
                 <input type="submit" value="Prijavite se" class="submitauth submission">
+            </form>
+            <form action="moderator/moderator_index.html">
+                <input type="submit" value="Prijavite se kao moderator" class="submitauth submission">
             </form>
         </div>
     </div>

@@ -238,3 +238,10 @@ li.inputlabel2 a {
     text-align: center !important;
     align-self: center !important;
 }
+
+.submitauth2 {
+    background: #bbb !important;
+    color: #44e;
+    font-weight: bold;
+    width: 15em !important;
+}
