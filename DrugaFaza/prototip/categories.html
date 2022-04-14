@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!--Sergej Prosic-->
     <link rel="stylesheet" href="./css/styles.css">
+    <script src="./scripts/script.js"></script>
     <title>Document</title>
 </head>
 <body>
@@ -70,6 +71,11 @@
                 <li class="inputlabel2">
                     
                     <a href="content.html">Kategorija 12</a>
+                </li>
+				<li class="inputlabel2">
+                    <button id="buttonAddCategory" onclick="addCategory()">+ Dodaj kategoriju</button>
+                    <input type="text" id="inputAddCategory" placeholder="Naziv kategorije..." style="display: none;">
+                    <input type="submit" id="submitAddCategory" value="Dodaj" style="display: none;">
                 </li>
             </ul>
         </div>

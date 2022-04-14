@@ -245,3 +245,7 @@ li.inputlabel2 a {
     font-weight: bold;
     width: 15em !important;
 }
+
+#buttonAddCategory {
+    font-size: 15px;
+}

@@ -13,3 +13,15 @@ function filterCategories() {
         }
     }
 }
+
+function addCategory() {
+    var button, input, submit;
+    input = document.getElementById("inputAddCategory");
+    button = document.getElementById("buttonAddCategory");
+    submit = document.getElementById("submitAddCategory");
+
+    button.style.display = "none";
+    input.style.display = "";
+    submit.style.display = "";
+
+}
