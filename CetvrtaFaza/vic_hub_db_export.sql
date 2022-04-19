@@ -77,6 +77,7 @@ CREATE TABLE `comment` (
   `ordinal_number` int NOT NULL,
   `content` text NOT NULL,
   `status` char(1) NOT NULL DEFAULT 'A',
+  `date_posted` datetime DEFAULT NULL,
   PRIMARY KEY (`id_comment`),
   KEY `FK_comment_id_joke_idx` (`id_joke`),
   KEY `FK_comment_id_user_idx` (`id_user`),
@@ -119,6 +120,7 @@ CREATE TABLE `joke` (
   `id_user_created` int NOT NULL,
   `id_user_reviewed` int DEFAULT NULL,
   `status` char(1) NOT NULL DEFAULT 'W',
+  `date_posted` datetime DEFAULT NULL,
   PRIMARY KEY (`id_joke`),
   KEY `FK_joke_id_user_created_idx` (`id_user_created`),
   KEY `FK_joke_id_user_reviewed_idx` (`id_user_reviewed`),
@@ -193,4 +195,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-04-19 22:31:58
+-- Dump completed on 2022-04-20  0:29:08
