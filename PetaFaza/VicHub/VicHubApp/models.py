@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -9,11 +11,11 @@ class User(AbstractUser):
     #hashed_password = models.CharField(max_length=250)
     #first_name = models.CharField(max_length=45)
     #last_name = models.CharField(max_length=45)
-    date_of_birth = models.DateField()
+    date_of_birth = models.DateField(default=datetime.datetime.today())
     subscribed = models.CharField(max_length=1) # Y, N
     status = models.CharField(max_length=1)# A, B
     type = models.CharField(max_length=1) # M, A, U
-    date_of_promotion = models.DateTimeField()
+    date_of_promotion = models.DateTimeField(default=datetime.datetime.now())
 
     class Meta:
         managed = True
