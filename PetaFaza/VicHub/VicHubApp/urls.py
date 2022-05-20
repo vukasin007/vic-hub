@@ -7,4 +7,5 @@ urlpatterns = [
     # path('logout/', logout_req, name='logout'),
     # path('profile/<int:user_id>', profile_req, name='profile'),
     # path('addjoke/', add_joke, name='add_joke'),
+
 ]
