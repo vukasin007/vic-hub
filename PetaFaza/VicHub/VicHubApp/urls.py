@@ -19,11 +19,12 @@ urlpatterns = [
     path('category/<int:category_id>', category_req, name='category'), #comi
     # path('add_category/', add_category_req, name='add_category'),
 
-    # path('add_comment/', add_comment, name='add_comment'),
+    # path('add_comment/', add_comment, name='add_comment'), #comi
     # path('delete_comment/<int:comment_id>', delete_comment, name='delete_comment'),
 
-    # path('accept_joke/<int:joke_id>', accept_joke, name='accept_joke'),
-    # path('reject_joke/<int:joke_id>', reject_joke, name='reject_joke'),
+    # path('pending_jokes/', pending_jokes, name= 'pending_jokes') # comi, ova 2 dole nam ne trebaju samo ce se pozvati ovaj kad se klikne na jedno od dugmadi accept ili reject
+    # path('accept_joke/<int:joke_id>', accept_joke, name='accept_joke'), #comi
+    # path('reject_joke/<int:joke_id>', reject_joke, name='reject_joke'), #comi
 
     # path('grade_joke/<int:joke_id>/<int:grade>', grade_joke, name='grade_joke'),
 
