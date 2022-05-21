@@ -12,13 +12,13 @@
 <body>
 
     <div class="topnav">
-        <a href="./index.html" class="main"><p class="unskew">VicHub</p></a>
-        <a href="./categories.html"><p class="unskew">Citaj viceve</p></a>
+        <a href="{% url 'home' %}" class="main"><p class="unskew">VicHub</p></a>
+        <a href="{% url 'all_categories' %}"><p class="unskew">Citaj viceve</p></a>
         <!---<a href="./add_joke.html"><p class="unskew">Dodaj vic</p></a>
        <a href="#"><p class="unskew">Opcija levo</p></a>--->
 
-        <a href="./login.html" class="right main"><p class="unskew">Prijavite se</p></a>
-        <a href="./register.html" class="right main"><p class="unskew">Registrujte se</p></a>
+        <a href="{% url 'login' %}"class="right main"><p class="unskew">Prijavite se</p></a>
+        <a href="{% url 'register' %}" class="right main"><p class="unskew">Registrujte se</p></a>
     </div>
 
     <div class="welcome content">
