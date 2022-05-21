@@ -4,7 +4,7 @@ from .views import *
 urlpatterns = [
     path('', index, name='home'),
     path('login/', login_req, name='login'),
-    # path('logout/', logout_req, name='logout'),
+    # path('logout/', logout_req, name='logout'),  # vukasin007
     path('register/', register_req, name='register'),
     path('all_categories/', all_categories, name='all_categories'),
     # path('register_admin/', register_admin_req, name='register_admin'),
@@ -26,13 +26,13 @@ urlpatterns = [
 
     # path('grade_joke/<int:joke_id>/<int:grade>', grade_joke, name='grade_joke'),
 
-    # path('subscribe_to_bilten/', subscribe_to_bilten, name='subscribe_to_bilten'),
-    # path('unsubscribe_from_bilten/', unsubscribe_from_bilten, name='unsubscribe_from_bilten'),
+    # path('subscribe_to_bilten/', subscribe_to_bilten, name='subscribe_to_bilten'),  # vukasin007
+    # path('unsubscribe_from_bilten/', unsubscribe_from_bilten, name='unsubscribe_from_bilten'),  # vukasin007
 
-    # path('request_mod/', request_mod, name='request_mod'),
-    # path('accept_mod_request/<int:request_id>', accept_mod_request, name='accept_mod_request'),
-    # path('reject_mod_request/<int:request_id>', reject_mod_request, name='reject_mod_request'),
+    # path('request_mod/', request_mod, name='request_mod'),  # vukasin007
+    # path('accept_mod_request/<int:request_id>', accept_mod_request, name='accept_mod_request'),  # vukasin007
+    # path('reject_mod_request/<int:request_id>', reject_mod_request, name='reject_mod_request'),  # vukasin007
 
-    # path('change_personal_data/', change_personal_data, name='change_personal_data'),
-    # path('remove_mod/<int:user_id>', remove_mod, name='remove_mod'),
+    # path('change_personal_data/', change_personal_data, name='change_personal_data'),  # vukasin007
+    # path('remove_mod/<int:user_id>', remove_mod, name='remove_mod'),  # vukasin007
 ]
