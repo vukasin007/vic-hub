@@ -207,3 +207,23 @@ def add_joke(request: HttpRequest):
 @login_required(login_url='login')
 def profile(request: HttpRequest):
     return render(request, 'profile.html')
+
+@login_required(login_url='login')
+def add_comment(request: HttpRequest, joke_id):
+    joke = Joke.objects.get(pk=joke_id)
+    context = {
+        "joke": joke
+    }
+    if request.method == "POST":
+        content = request.POST["comment_content"]
+        new_comment = Comment()
+        new_comment.id_joke=joke
+        new_comment.id_user = request.user
+        new_comment.content = content
+        jokes = Comment.objects.filter(id_joke=joke)
+        number = jokes.count()+1
+        new_comment.ordinal_number = number
+        new_comment.status = 'A'
+        new_comment.save()
+
+    return render(request, "add_comment.html", context)

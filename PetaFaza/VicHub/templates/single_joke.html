@@ -40,18 +40,21 @@
                 {{ joke.content|linebreaks }}
                 <hr>
             </p>
-            <!---<form action="add_comment.html">
-                <table class="table-for-joke"  >
+            {% if user.is_authenticated %}
+            <form action="{% url 'add_comment' joke.id_joke %}" method="get">
+                {% csrf_token %}
+                <table class="table-for-joke">
                     <tr>
-                        <td rowspan="2"><input type="submit" value="Dodaj komentar" class="submitform submitauth"> </td>
-                        <td><input type="range" width="2%"></td>
+                        <td rowspan="2"><input type="submit" value="Dodaj komentar" name="button_single" class="submitform submitauth"> </td>
+                        <td><input type="range" name="grade" width="2%"></td>
                     </tr>
                     <tr>
-                        <td>Oceni vic</td>                     
+                        <td><input type="button" value="Oceni" name="button_single" class="submitform submitauth"> </td>
                     </tr>
 
                 </table>
-            </form>--->
+            </form>
+            {% endif %}
         </div>
         
             <h5>Komentari</h5>
