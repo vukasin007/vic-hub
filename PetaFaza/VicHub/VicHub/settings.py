@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+# vukasin007
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -129,3 +130,18 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'VicHubApp.User'
+
+# bilten mailing properties
+EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = '<<mail>>'
+EMAIL_HOST_PASSWORD = '<<password>>'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_PORT = 465
+
+# celery properties
+# CELERY_TIMEZONE = "utc+1" default is local timezone
+CELERY_TASK_TRACK_STARTED = True
+CELERY_BROKER_URL = "redis://localhost:6379/0"
+CELERY_RESULT_BACKEND = "redis://localhost:6379/1"

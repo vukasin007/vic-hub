@@ -64,6 +64,7 @@ def all_categories(request : HttpRequest): #comile
     return render(request, 'categories.html', context)
 
 
+# vukasin007
 def logout_req(request: HttpRequest):
     try:
         logout(request)
@@ -73,6 +74,7 @@ def logout_req(request: HttpRequest):
     return render(request, 'index.html')
 
 
+# vukasin007
 @login_required(login_url='login')
 def subscribe_to_bilten(request: HttpRequest):
     try:
@@ -85,6 +87,7 @@ def subscribe_to_bilten(request: HttpRequest):
     return render(request, 'index.html')
 
 
+# vukasin007
 @login_required(login_url='login')
 def unsubscribe_from_bilten(request: HttpRequest):
     try:
@@ -97,6 +100,7 @@ def unsubscribe_from_bilten(request: HttpRequest):
     return render(request, 'index.html')
 
 
+# vukasin007
 @login_required(login_url='login')
 def request_mod(request: HttpRequest):
     try:
@@ -111,6 +115,7 @@ def request_mod(request: HttpRequest):
     return render(request, 'index.html')
 
 
+# vukasin007
 @login_required(login_url='login')
 def accept_mod_request(request: HttpRequest, request_id: int):
     try:
@@ -128,6 +133,7 @@ def accept_mod_request(request: HttpRequest, request_id: int):
     return render(request, 'index.html')    # treba render stranica za prihvatanje/odbijanje zahteva
 
 
+# vukasin007
 @login_required(login_url='login')
 def reject_mod_request(request: HttpRequest, request_id: int):
     try:
@@ -145,6 +151,7 @@ def reject_mod_request(request: HttpRequest, request_id: int):
     return render(request, 'index.html')    # treba render stranica za prihvatanje/odbijanje zahteva
 
 
+# vukasin007
 @login_required(login_url='login')
 def remove_mod(request: HttpRequest, user_id: int):
     try:
@@ -190,6 +197,7 @@ def joke(request: HttpRequest, joke_id): #comile
     }
     return render(request, 'single_joke.html', context)
 
+
 @login_required(login_url='login')
 def add_joke(request: HttpRequest):
     if request.method == 'POST':
@@ -204,9 +212,11 @@ def add_joke(request: HttpRequest):
     
     return render(request, "add_joke.html")
 
+
 @login_required(login_url='login')
 def profile(request: HttpRequest):
     return render(request, 'profile.html')
+
 
 @login_required(login_url='login')
 def add_comment(request: HttpRequest, joke_id):
