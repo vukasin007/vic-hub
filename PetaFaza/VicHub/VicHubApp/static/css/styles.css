@@ -133,7 +133,8 @@ body {
 
 .users {
     list-style-type: none;
-    display: flex;
+    /*display: flex;
+    flex-direction: column;*/
 }
 
 div.users {
@@ -195,7 +196,7 @@ div.joke {
     color: #fff;
     font-weight: bold;
     background: linear-gradient(45deg, #99f, #22d);
-    display: inline-block;
+    /*display: inline-block;*/
     border-radius: 15px;
     padding: 1.5em;
     text-align: center;
@@ -209,7 +210,7 @@ li.inputlabel2 {
 }
 
 li.inputlabel2 a {
-   /* float: center; */
+    /*float: center;*/
     color: #fff;
     text-decoration: none;
 

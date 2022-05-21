@@ -13,20 +13,26 @@
 <body>
 
     <div class="topnav">
-        <a href="./index.html" class="main"><p class="unskew">VicHub</p></a>
-        <a href="./categories.html"><p class="unskew">Citaj viceve</p></a>
+        <a href="{% url 'home' %}" class="main"><p class="unskew">VicHub</p></a>
+        <a href="{% url 'all_categories' %}"><p class="unskew">Citaj viceve</p></a>
         <!---- <a href="./add_joke.html"><p class="unskew">Dodaj vic</p></a>
        <a href="content.html"><p class="unskew">Opcija levo</p></a>--->
        
 
-        <a href="./login.html" class="right main"><p class="unskew">Prijavite se</p></a>
-        <a href="./register.html" class="right main"><p class="unskew">Registrujte se</p></a>
+        <a href="{% url 'login' %}" class="right main"><p class="unskew">Prijavite se</p></a>
+        <a href="{% url 'register' %}" class="right main"><p class="unskew">Registrujte se</p></a>
     </div>
 
     <div class="content welcome">
         <div class="users">
             <ul class="users">
-                <li class="inputlabel2">
+                {% for category in categories%}
+                    <li class="inputlabel2">
+                        <a href="{% url 'category' category.id_category %}">{{category.name}}</a>
+                    </li>
+                {% endfor %}
+
+              <!--  <li class="inputlabel2">
                     <a href="content.html">Kategorija 1</a>
                 </li>
                 <li class="inputlabel2">
@@ -72,7 +78,7 @@
                 <li class="inputlabel2">
                     
                     <a href="content.html">Kategorija 12</a>
-                </li>
+                </li> -->
             </ul>
         </div>
     </div>

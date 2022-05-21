@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module version="4">
+<<<<<<< HEAD
+  <component name="NewModuleRootManager">
+=======
   <component name="FacetManager">
     <facet type="django" name="Django">
       <configuration>
@@ -14,6 +17,7 @@
   </component>
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$" />
+>>>>>>> 490552e5f00b03dd870fe6919577fec17c8e0f55
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
