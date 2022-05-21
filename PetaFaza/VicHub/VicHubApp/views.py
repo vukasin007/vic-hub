@@ -41,11 +41,11 @@ def login_req(request: HttpRequest):
                 login(request, user)
                 messages.success(request, 'Uspešno ste se prijavili.')
                 if user.groups.filter(name='basic').exists():
-                    return render(request, 'logged_index.html')
+                    return render(request, 'index.html')
                 if user.groups.filter(name='moderator').exists():
-                    return render(request, 'moderator/moderator_index.html')
+                    return render(request, 'index.html')
                 if user.groups.filter(name='admin').exists():
-                    return render(request, 'moderator/moderator_index.html')
+                    return render(request, 'index.html')
             else:
                 messages.error(request, 'Prijava nije uspela. Podaci su nevalidni.')
         else:
@@ -189,3 +189,21 @@ def joke(request: HttpRequest, joke_id): #comile
         "autor": autor,
     }
     return render(request, 'single_joke.html', context)
+
+@login_required(login_url='login')
+def add_joke(request: HttpRequest):
+    if request.method == 'POST':
+        title = request.POST['joke_title']
+        content = request.POST['joke_content']
+        new_joke = Joke()
+        new_joke.title=title
+        new_joke.content=content
+        new_joke.id_user_created = request.user
+        new_joke.status = "P"
+        new_joke.save()
+    
+    return render(request, "add_joke.html")
+
+@login_required(login_url='login')
+def profile(request: HttpRequest):
+    return render(request, 'profile.html')

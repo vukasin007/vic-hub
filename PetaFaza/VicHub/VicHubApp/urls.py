@@ -10,11 +10,11 @@ urlpatterns = [
     path('all_categories/', all_categories, name='all_categories'),
     # path('register_admin/', register_admin_req, name='register_admin'),
     # path('delete_user_admin/<int:user_id>', register_admin_req, name='register_admin'),# moze li preko setItem i getItem
-    # path('profile/', profile, name='profile'),
+    path('profile/', profile, name='profile'),
 
     path('joke/<int:joke_id>', joke , name='joke'), #comi
-    # path('add_joke/', add_joke, name='add_joke'), #comi
-    # path('delete_joke/<int:joke_id>', delete_joke, name='delete_joke'),
+    path('add_joke/', add_joke , name='add_joke'), #comi
+    #path('delete_joke/<int:joke_id>', delete_joke, name='delete_joke'),
 
     path('category/<int:category_id>', category_req, name='category'), #comi
     # path('add_category/', add_category_req, name='add_category'),

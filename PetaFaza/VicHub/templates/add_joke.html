@@ -12,23 +12,23 @@
 <body>
 
     <div class="topnav">
-        <a href="logged_index.html" class="main"><p class="unskew">VicHub</p></a>
-        <a href="logged_categories.html"><p class="unskew">Citaj viceve</p></a>
-        <a href="./add_joke.html"><p class="unskew">Dodaj vic</p></a>
-       
-       
+        <a href="{% url 'home' %}" class="main"><p class="unskew">VicHub</p></a>
+        <a href="{% url 'all_categories' %}"><p class="unskew">Citaj viceve</p></a>
+        <a href="{% url 'add_joke' %}" ><p class="unskew">Dodaj vic</p></a>
 
-        <a href="./login.html" class="right main"><p class="unskew">Odjavite se</p></a>
-        <a href="profile.html" class="right main"><p class="unskew">Pogledaj profil</p></a>
+
+        <a href="{% url 'logout' %}" class="right main"><p class="unskew">Odjavite se</p></a>
+        <a href="{% url 'profile' %}" class="right main"><p class="unskew">Pogledaj profil</p></a>
         
     </div>
 
     <div class="content welcome">
         <div class="jokecontent inputlabel">
-            <form action="">
-                <label for="">Naslov vica:&nbsp;</label><input type="text" placeholder="Naslov vica..." class="joketitle"><br><br>
+            <form action="{% url 'add_joke' %}" method="post">
+                {% csrf_token %}
+                <label for="">Naslov vica:&nbsp;</label><input type="text" name="joke_title" placeholder="Naslov vica..." class="joketitle"><br><br>
                 <label for="">Tekst vica:&nbsp;</label><br><br>
-                <textarea name="" id="" cols="50" rows="10"></textarea>
+                <textarea name="joke_content" id="" cols="50" rows="10"></textarea>
                 <br><br>
                 <input type="submit" value="Posalji na pregled" class="submitform submitauth">
             </form>

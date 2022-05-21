@@ -14,18 +14,30 @@
     <div class="topnav">
         <a href="{% url 'home' %}" class="main"><p class="unskew">VicHub</p></a>
         <a href="{% url 'all_categories' %}"><p class="unskew">Citaj viceve</p></a>
+        {% if user.is_authenticated%}
+        <a href="{% url 'add_joke' %}" ><p class="unskew">Dodaj vic</p></a>
+        {% endif %}
         <!---<a href="./add_joke.html"><p class="unskew">Dodaj vic</p></a>--->
         <!---<a href="#"><p class="unskew">Opcija levo</p></a>--->
 
-        <a href="{% url 'login' %}" class="right main"><p class="unskew">Prijavite se</p></a>
-        <a href="{% url 'register' %}" class="right main"><p class="unskew">Registrujte se</p></a>
+        {% if user.is_authenticated %}
+            <a href="{% url 'logout' %}" class="right main"><p class="unskew">Odjavite se</p></a>
+            {% else%}
+            <a href="{% url 'login' %}" class="right main"><p class="unskew">Prijavite se</p></a>
+        {% endif %}
+        {% if user.is_authenticated %}
+            <a href="{% url 'profile' %}" class="right main"><p class="unskew">Pogledaj profil</p></a>
+            {% else%}
+            <a href="{% url 'register' %}" class="right main"><p class="unskew">Registrujte se</p></a>
+        {% endif %}
     </div>
 
     <div class="content welcome">
         <h1>Dobrodosli na VicHub</h1><br>
         <a href="{% url 'all_categories' %}" class="submission" style="font-weight: bold;">Citaj viceve</a>
-        <!---<a href="./add_joke.html" class="submission" style="font-weight: bold;">Dodaj vic</a>--->
-        
+        {% if user.is_authenticated %}
+        <a href="{% url 'add_joke' %}" class="submission" style="font-weight: bold;">Dodaj vic</a>
+        {% endif %}
     </div>
     
 </body>
