@@ -6,20 +6,24 @@ from django.db import models
 
 class User(AbstractUser):
     id_user = models.AutoField(primary_key=True)
-    #username = models.CharField(unique=True, max_length=45)
-    #mail = models.CharField(max_length=45)
-    #hashed_password = models.CharField(max_length=250)
-    #first_name = models.CharField(max_length=45)
-    #last_name = models.CharField(max_length=45)
+    # username = models.CharField(unique=True, max_length=45)
+    # mail = models.CharField(max_length=45)
+    # hashed_password = models.CharField(max_length=250)
+    # first_name = models.CharField(max_length=45)
+    # last_name = models.CharField(max_length=45)
     date_of_birth = models.DateField(default=datetime.datetime.today())
-    subscribed = models.CharField(max_length=1) # Y, N
-    status = models.CharField(max_length=1)# A, B
-    type = models.CharField(max_length=1) # M, A, U
+    # Y, N
+    subscribed = models.CharField(max_length=1)
+    # A, B
+    status = models.CharField(max_length=1)
+    # M, A, U
+    type = models.CharField(max_length=1)
     date_of_promotion = models.DateTimeField(default=datetime.datetime.now())
 
     class Meta:
         managed = True
         db_table = 'user'
+
 
 """class Administrator(models.Model):
     id_user = models.OneToOneField('User', models.DO_NOTHING, db_column='id_user', primary_key=True)
@@ -54,7 +58,8 @@ class Comment(models.Model):
     id_user = models.ForeignKey('User', models.DO_NOTHING, db_column='id_user')
     ordinal_number = models.IntegerField()
     content = models.TextField()
-    status = models.CharField(max_length=1)#A,D
+    # A, D
+    status = models.CharField(max_length=1)
     date_posted = models.DateTimeField(blank=True, null=True)
 
     class Meta:
@@ -78,8 +83,10 @@ class Joke(models.Model):
     title = models.CharField(max_length=45)
     content = models.TextField()
     id_user_created = models.ForeignKey('User', models.DO_NOTHING, db_column='id_user_created', related_name='created')
-    id_user_reviewed = models.ForeignKey('User', models.DO_NOTHING, db_column='id_user_reviewed',related_name='reviewed', blank=True, null=True)
-    status = models.CharField(max_length=1) #P,A,R,D
+    id_user_reviewed = models.ForeignKey('User', models.DO_NOTHING, db_column='id_user_reviewed',
+                                         related_name='reviewed', blank=True, null=True)
+    # P, A, R, D
+    status = models.CharField(max_length=1)
     date_posted = models.DateTimeField(blank=True, null=True)
 
     class Meta:
@@ -98,13 +105,12 @@ class Joke(models.Model):
 
 class Request(models.Model):
     id_request = models.AutoField(primary_key=True)
-    status = models.CharField(max_length=1)# P,A,R
+    # P, A, R
+    status = models.CharField(max_length=1)
     id_user = models.ForeignKey('User', models.DO_NOTHING, db_column='id_user', related_name='user1')
-    id_user_reviewed = models.ForeignKey('User', models.DO_NOTHING, db_column='id_user_reviewed', related_name='approved',blank=True, null=True)
+    id_user_reviewed = models.ForeignKey('User', models.DO_NOTHING, db_column='id_user_reviewed',
+                                         related_name='approved', blank=True, null=True)
 
     class Meta:
         managed = True
         db_table = 'request'
-
-
-
