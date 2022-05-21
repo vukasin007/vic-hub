@@ -30,4 +30,7 @@ def login_req(request: HttpRequest):
 
 def all_categories(request : HttpRequest):
     categories = Category.objects.all()
-    
+    context = {
+        "categories": categories,
+    }
+    return render(request, 'categories.html', context)

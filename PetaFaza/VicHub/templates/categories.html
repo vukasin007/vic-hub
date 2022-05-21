@@ -13,8 +13,8 @@
 <body>
 
     <div class="topnav">
-        <a href="./index.html" class="main"><p class="unskew">VicHub</p></a>
-        <a href="./categories.html"><p class="unskew">Citaj viceve</p></a>
+        <a href="{% url 'home' %}" class="main"><p class="unskew">VicHub</p></a>
+        <a href="{% url 'all_categories' %}"><p class="unskew">Citaj viceve</p></a>
         <!---- <a href="./add_joke.html"><p class="unskew">Dodaj vic</p></a>
        <a href="content.html"><p class="unskew">Opcija levo</p></a>--->
        
@@ -26,7 +26,8 @@
     <div class="content welcome">
         <div class="users">
             <ul class="users">
-                <li class="inputlabel2">
+                {% for category in categories %}
+              <!--  <li class="inputlabel2">
                     <a href="content.html">Kategorija 1</a>
                 </li>
                 <li class="inputlabel2">
@@ -72,7 +73,7 @@
                 <li class="inputlabel2">
                     
                     <a href="content.html">Kategorija 12</a>
-                </li>
+                </li> -->
             </ul>
         </div>
     </div>
