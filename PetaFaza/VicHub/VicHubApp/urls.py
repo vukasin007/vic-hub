@@ -15,7 +15,7 @@ urlpatterns = [
     # path('add_joke/', add_joke, name='add_joke'),
     # path('delete_joke/<int:joke_id>', delete_joke, name='delete_joke'),
 
-    # path('category/<int:category_id>', category_req, name='category'),
+    # path('category/<int:category_id>', category_req, name='category'), #comi
     # path('add_category/', add_category_req, name='add_category'),
 
     # path('add_comment/', add_comment, name='add_comment'),
