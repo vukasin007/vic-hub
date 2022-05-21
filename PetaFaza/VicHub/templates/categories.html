@@ -19,8 +19,8 @@
        <a href="content.html"><p class="unskew">Opcija levo</p></a>--->
        
 
-        <a href="./login.html" class="right main"><p class="unskew">Prijavite se</p></a>
-        <a href="./register.html" class="right main"><p class="unskew">Registrujte se</p></a>
+        <a href="{% url 'login' %}" class="right main"><p class="unskew">Prijavite se</p></a>
+        <a href="{% url 'register' %}" class="right main"><p class="unskew">Registrujte se</p></a>
     </div>
 
     <div class="content welcome">
@@ -28,7 +28,7 @@
             <ul class="users">
                 {% for category in categories%}
                     <li class="inputlabel2">
-                        <a href="{% url 'all_categories' %}">{{category.name}}</a>
+                        <a href="{% url 'category' category.id_category %}">{{category.name}}</a>
                     </li>
                 {% endfor %}
 
