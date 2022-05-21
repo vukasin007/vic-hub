@@ -33,4 +33,5 @@ def all_categories(request : HttpRequest):
     context = {
         "categories": categories,
     }
+    
     return render(request, 'categories.html', context)
