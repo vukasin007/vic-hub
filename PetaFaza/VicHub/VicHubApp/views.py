@@ -1,11 +1,28 @@
-from django.shortcuts import render
-from django.contrib import messages
-from django.contrib.auth import login, logout, authenticate
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.models import Group
+from django.shortcuts import render, redirect
 from django.http import HttpRequest
-# Create your views here.
+from .forms import CustomUserCreationForm
+from django.contrib import messages
 
 
 def index(request: HttpRequest):
     return render(request, 'index.html')
+
+
+def register_req(request: HttpRequest):
+    form = CustomUserCreationForm(data=request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            user = form.save()
+            user.groups.add(Group.objects.get(name='basic'))
+            messages.success(request, 'Uspešno ste se registrovali.')
+            return redirect('login')
+        else:
+            messages.error(request, 'Registracija nije uspela. Podaci su nevalidni.')
+    return render(request, 'register.html', {
+        'form': form
+    })
+
+
+def login_req(request: HttpRequest):
+    return render(request, 'login.html')

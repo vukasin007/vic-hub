@@ -13,7 +13,8 @@
     </facet>
   </component>
   <component name="NewModuleRootManager">
-    <orderEntry type="jdk" jdkName="Python 3.9" jdkType="Python SDK" />
+    <content url="file://$MODULE_DIR$" />
+    <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PyDocumentationSettings">
