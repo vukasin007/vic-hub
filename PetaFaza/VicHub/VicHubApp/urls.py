@@ -1,12 +1,13 @@
 from django.urls import path
+
 from .views import *
 
 urlpatterns = [
     path('', index, name='home'),
-    path('login/', login_req, name='login'),
-    # path('logout/', logout_req, name='logout'),
     path('register/', register_req, name='register'),
     # path('register_admin/', register_admin_req, name='register_admin'),
+    path('login/', login_req, name='login'),
+    path('logout/', logout_req, name='logout'),
     # path('delete_user_admin/<int:user_id>', register_admin_req, name='register_admin'),# moze li preko setItem i getItem
     # path('profile/', profile, name='profile'),
 

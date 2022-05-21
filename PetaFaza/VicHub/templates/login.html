@@ -24,14 +24,24 @@
     <div class="welcome content">
         <h2>Prijava</h2>
         <div class="inputlabel">
-            <form action="logged_index.html">
-                <label for="">Korisnicko ime ili email:&nbsp;</label><input type="text" placeholder="Korisnicko ime ili email..." class="data"><br><br>
-                <label for="">Lozinka:&nbsp;</label><input type="password" placeholder="*************" class="data"><br>
+            <form method="post">
+                <!--<label for="">Korisnicko ime ili email:&nbsp;</label><input type="text" placeholder="Korisnicko ime ili email..." class="data"><br><br>
+                <label for="">Lozinka:&nbsp;</label><input type="password" placeholder="*************" class="data"><br>-->
+                {% csrf_token %}
+                <span style="color: red;">{{ form.errors.username }}</span>
+                <label for="id_username">Korisnicko ime:&nbsp;</label>{{ form.username }}<br><br>
+                <span style="color: red;">{{ form.errors.password }}</span>
+                <label for="id_password">Lozinka:&nbsp;</label>{{ form.password }}<br>
+
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+
                 <input type="submit" value="Prijavite se" class="submitauth submission">
             </form>
-            <form action="moderator/moderator_index.html">
+            <!--<form action="moderator/moderator_index.html">
                 <input type="submit" value="Prijavite se kao moderator" class="submitauth submission">
-            </form>
+            </form>-->
         </div>
     </div>
     

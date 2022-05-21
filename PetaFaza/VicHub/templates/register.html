@@ -33,13 +33,25 @@
                 <label for="">Prezime:&nbsp;</label><input type="text" placeholder="Prezime..." class="data"><br><br>
                 <label for="">Datum rodjenja:&nbsp;</label><input type="date" placeholder="Prezime..." class="data"><br>-->
                 {% csrf_token %}
+                <span style="color: red;">{{ form.errors.username }}</span>
                 <label for="id_username">Korisnicko ime:&nbsp;</label>{{ form.username }}<br><br>
+                <span style="color: red;">{{ form.errors.email }}</span>
                 <label for="id_email">Email adresa:&nbsp;</label>{{ form.email }}<br><br>
+                <span style="color: red;">{{ form.errors.password1 }}</span>
                 <label for="id_password1">Lozinka:&nbsp;</label>{{ form.password1 }}<br><br>
+                <span style="color: red;">{{ form.errors.password2 }}</span>
                 <label for="id_password2">Potvrdite lozinku:&nbsp;</label>{{ form.password2 }}<br><br>
+                <span style="color: red;">{{ form.errors.first_name }}</span>
                 <label for="id_first_name">Ime:&nbsp;</label>{{ form.first_name }}<br><br>
+                <span style="color: red;">{{ form.errors.last_name }}</span>
                 <label for="id_last_name">Prezime:&nbsp;</label>{{ form.last_name }}<br><br>
+                <span style="color: red;">{{ form.errors.date_of_birth }}</span>
                 <label for="id_date_of_birth">Datum rodjenja:&nbsp;</label>{{ form.date_of_birth }}<br>
+
+                {% for message in messages %}
+                    <p style="color: red;">{{ message }}</p>
+                {% endfor %}
+
                 <input type="submit" value="Registrujte se" class="submission submitauth">
             </form>
         </div>
