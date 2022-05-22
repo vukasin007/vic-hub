@@ -1,6 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm
-from django.forms import TextInput, DateInput, PasswordInput, EmailInput
-
+from django.forms import TextInput, DateInput, PasswordInput, EmailInput, Form
+from django import forms
 from .models import User
 
 
@@ -27,3 +27,10 @@ class CustomUserCreationForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+
+# vukasin007
+class AddNewCategoryForm(Form):
+    newCategoryName = forms.CharField(max_length=30)
+
+
