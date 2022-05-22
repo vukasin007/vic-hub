@@ -12,97 +12,57 @@
 <body>
 
     <div class="topnav">
-        <a href="moderator_index.html" class="main"><p class="unskew">VicHub</p></a>
-        <a href="moderator_categories.html"><p class="unskew">Citaj viceve</p></a>
-        <a href="moderator_add_joke.html"><p class="unskew">Dodaj vic</p></a>
-        <a href="new_content_review.html"><p class="unskew">Odobri vic</p></a>
-       
+        <a href="{% url 'home' %}" class="main"><p class="unskew">VicHub</p></a>
+        <a href="{% url 'all_categories' %}"><p class="unskew">Citaj viceve</p></a>
+        {% if user.is_authenticated%}
+            <a href="{% url 'add_joke' %}" ><p class="unskew">Dodaj vic</p></a>
+            {% if user.type == "M" or user.type == "A" %}
+                <a href="{% url 'pending_jokes' %}" ><p class="unskew">Neodobreni vicevi</p></a>
+            {% else %}
+                <a href="{% url 'request_mod' %}" ><p class="unskew">Zahtev za moderatora</p></a>
+            {% endif %}
+        {% endif %}
+        <!---<a href="./add_joke.html"><p class="unskew">Dodaj vic</p></a>--->
+        <!---<a href="#"><p class="unskew">Opcija levo</p></a>--->
 
-        <a href="../login.html" class="right main"><p class="unskew">Odjavite se</p></a>
-        <a href="moderator_profile.html" class="right main"><p class="unskew">Pogledaj profil</p></a>
-        
+        {% if user.is_authenticated %}
+            <a href="{% url 'logout' %}" class="right main"><p class="unskew">Odjavite se</p></a>
+            {% else%}
+            <a href="{% url 'login' %}" class="right main"><p class="unskew">Prijavite se</p></a>
+        {% endif %}
+        {% if user.is_authenticated %}
+            <a href="{% url 'profile' %}" class="right main"><p class="unskew">Pogledaj profil</p></a>
+            {% else%}
+            <a href="{% url 'register' %}" class="right main"><p class="unskew">Registrujte se</p></a>
+        {% endif %}
     </div>
 
     <div class="welcome content">
         <h2>Odobravanje viceva</h2>
-        <div class="joke inputlabel">
-            <h2>Joke title</h2>
-            <p>Joke content <br>
-                Joke content content content <br>
-                Joke content <br>
-                Joke content <br>
-                Joke content <br>
-                Joke content <br>
-                ... <br>
+        {% for joke in all_pending_jokes %}
+            <div class="joke inputlabel">
+            <h2>{{ joke.title }}</h2>
+            <p>
+                {{ joke.content }}
             </p>
-            <form action="">
-                <table class="table-for-joke">
-                    <tr>
-                        <td><input type="button" value="Odobri" class="submitauth2"> </td>
-                        <td><input type="button" value="Odbaci" class="submitauth2"> </td>
-                    </tr>
-                </table>
-            </form>
+            <table class="table-for-joke">
+                <tr>
+                    <td>
+                        <form method="post" action="{% url 'choose_category' joke.id_joke %}">
+                            {% csrf_token %}
+                            <input type="submit" value="Odobri" class="submitauth2">
+                        </form>
+                    </td>
+                    <td>
+                        <form method="post" action="{% url 'reject_joke' joke.id_joke %}">
+                            {% csrf_token %}
+                            <input type="submit" value="Odbaci" class="submitauth2">
+                        </form>
+                    </td>
+                </tr>
+            </table>
         </div>
-        <div class="joke inputlabel">
-            <h2>Joke title</h2>
-            <p>Joke content <br>
-                Joke content content content <br>
-                Joke content <br>
-                Joke content <br>
-                Joke content <br>
-                Joke content <br>
-                ... <br>
-            </p>
-            <form action="">
-                <table class="table-for-joke">
-                    <tr>
-                        <td><input type="button" value="Odobri" class="submitauth2"> </td>
-                        <td><input type="button" value="Odbaci" class="submitauth2"> </td>
-                    </tr>
-                </table>
-            </form>
-        </div>
-        <br>
-        <div class="joke inputlabel">
-            <h2>Joke title</h2>
-            <p>Joke content <br>
-                Joke content content content <br>
-                Joke content <br>
-                Joke content <br>
-                Joke content <br>
-                Joke content <br>
-                ... <br>
-            </p>
-            <form action="">
-                <table class="table-for-joke">
-                    <tr>
-                        <td><input type="button" value="Odobri" class="submitauth2"> </td>
-                        <td><input type="button" value="Odbaci" class="submitauth2"> </td>
-                    </tr>
-                </table>
-            </form>
-        </div>
-        <div class="joke inputlabel">
-            <h2>Joke title</h2>
-            <p>Joke content <br>
-                Joke content content content <br>
-                Joke content <br>
-                Joke content <br>
-                Joke content <br>
-                Joke content <br>
-                ... <br>
-            </p>
-            <form action="">
-                <table class="table-for-joke">
-                    <tr>
-                        <td><input type="button" value="Odobri" class="submitauth2"> </td>
-                        <td><input type="button" value="Odbaci" class="submitauth2"> </td>
-                    </tr>
-                </table>
-            </form>
-        </div>
-        
+        {% endfor %}
     </div>
     
 </body>

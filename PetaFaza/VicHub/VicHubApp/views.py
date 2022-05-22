@@ -244,7 +244,7 @@ def accept_joke(request: HttpRequest, joke_id: int, category_id: int):
         messages.info(request, 'Uspesno odobravanje vica!')
     except:
         messages.error(request, 'Neuspesno odobravanje vica.')
-    return redirect('')
+    return redirect('pending_jokes')
 
 
 # vukasin007
@@ -255,6 +255,9 @@ def reject_joke(request: HttpRequest, joke_id: int):
         if logedmod.type != "A" and logedmod.type != "M":
             messages.error(request, 'Nemate privilegije.')
             return render(request, 'index.html')
+        if request.method == request.GET:
+            messages.error(request, 'Method nije POST')
+            return render(request, 'index.html')
         currjoke: Joke = Joke.objects.get(pk=joke_id)
         currjoke.status = "R"
         currjoke.id_user_reviewed = logedmod
@@ -263,7 +266,7 @@ def reject_joke(request: HttpRequest, joke_id: int):
         messages.info(request, 'Uspesno odbijanje vica!')
     except:
         messages.error(request, 'Neuspesno odbijanje vica.')
-    return render(request, 'new_content_review.html')
+    return redirect('pending_jokes')
 
 
 def category_req(request: HttpRequest, category_id): #comile
