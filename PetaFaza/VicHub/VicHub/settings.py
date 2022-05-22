@@ -131,16 +131,18 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'VicHubApp.User'
 
-# bilten mailing properties
+# bilten mailing properties @vukasin007
 EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = 'smtp.gmail.com'  # gmail
+# outlook- smtp-mail.outlook.com
+# yahoo- smtp.mail.yahoo.com
 EMAIL_HOST_USER = '<<mail>>'
 EMAIL_HOST_PASSWORD = '<<password>>'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-EMAIL_PORT = 465
+EMAIL_PORT = 465  # ili 587
 
-# celery properties
+# celery properties @vukasin007
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_TASK_TRACK_STARTED = True
 CELERY_BROKER_URL = "redis://127.0.0.1:6379/0"

@@ -12,7 +12,7 @@ def tick():
     return "return from tick: radi ok"
 
 
-@shared_task(name="send mail function")
+@shared_task(name="send-mail-function")
 def schedule_mail():
     message = render_to_string('bilten_email_template.html')
     mail_subject = 'Bilten nedeljni mejl'

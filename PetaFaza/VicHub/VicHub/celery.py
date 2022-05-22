@@ -54,6 +54,11 @@ app.conf.beat_schedule = {
         'task': 'tick',
         'schedule': 2.0,
     },
+    'send-emails-on-bilten': {
+        'task': 'send-mail-function',
+        # 'schedule': crontab(hour=10, minute=00, day_of_week=7),
+        'schedule': crontab(hour=10, minute=00),
+    }
 }
 
 

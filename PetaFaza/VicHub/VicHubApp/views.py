@@ -172,6 +172,24 @@ def remove_mod(request: HttpRequest, user_id: int):
     return render(request, 'index.html')    # treba render stranica za prihvatanje/odbijanje zahteva
 
 
+# vukasin007
+@login_required(login_url='login')
+def all_requests_mod(request: HttpRequest):
+    try:
+        logedmod: User = User.objects.get(username=request.user.get_username())
+        if logedmod.type != "A" and logedmod.type != "M":  # moze i preko group privilegija
+            messages.error(request, 'Nemate privilegije.')
+            return render(request, 'index.html')
+        all_requests_mod = Request.objects.all()
+    except:
+        all_requests_mod = []
+        messages.info(request, 'Neuspesno prikazivanje svih zahteva za moderatora.')
+    context = {
+        'all_requests_for_mod': all_requests_mod,
+    }
+    return render(request, 'nema stranice za to', context)  # !!!!!!!!!!!!!!!!!!!!! nema stranice za ovo
+
+
 def category_req(request: HttpRequest, category_id): #comile
     belongings = BelongsTo.objects.filter(id_category=category_id)
     category = Category.objects.get(pk=category_id)
