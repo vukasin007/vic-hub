@@ -48,11 +48,12 @@
         <!--  kategorije za selectovanje  -->
         <div class="users">
             <ul class="users">
-                {% for category in categories%}
-                    <li>
-                        <form method="post" action="{% url 'accept_joke' joke.joke_id category.id_category %}">
+                {% for category in categories %}
+                    <li class="inputlabel2">
+                        <form method="post" >
                             {% csrf_token %}
-                            <button class="inputlabel2" type="submit" value="{{category.name}}" name="vest_id" style="background-color: #2222dd">{{category.name}}</button>
+                            <a href="{% url 'accept_joke' joke.id_joke category.id_category %}">{{category.name}}</a>
+                            <!--<button class="inputlabel2" type="submit" value="{{category.name}}" name="vest_id" style="background-color: #2222dd">{{category.name}}</button>-->
                         </form>
                     </li>
                 {% endfor %}

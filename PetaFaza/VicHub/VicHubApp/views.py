@@ -258,6 +258,9 @@ def reject_joke(request: HttpRequest, joke_id: int):
         if logedmod.type != "A" and logedmod.type != "M":
             messages.error(request, 'Nemate privilegije.')
             return render(request, 'index.html')
+        if request.method == request.GET:
+            messages.error(request, 'Method nije POST')
+            return render(request, 'index.html')
         currjoke: Joke = Joke.objects.get(pk=joke_id)
         currjoke.status = "R"
         currjoke.id_user_reviewed = logedmod
@@ -347,7 +350,8 @@ def category_req(request: HttpRequest, category_id):  # comile
     jokes = []
     for belonging in belongings:
         joke = Joke.objects.get(pk=belonging.id_joke.id_joke)
-        jokes.append(joke)
+        if(joke.status == "A"):
+            jokes.append(joke)
     context= {
         "jokes" : jokes,
         "category" : category,
