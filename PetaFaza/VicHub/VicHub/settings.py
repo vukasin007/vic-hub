@@ -141,7 +141,11 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_PORT = 465
 
 # celery properties
-# CELERY_TIMEZONE = "utc+1" default is local timezone
+CELERY_TIMEZONE = TIME_ZONE
 CELERY_TASK_TRACK_STARTED = True
-CELERY_BROKER_URL = "redis://localhost:6379/0"
-CELERY_RESULT_BACKEND = "redis://localhost:6379/1"
+CELERY_BROKER_URL = "redis://127.0.0.1:6379/0"
+CELERY_RESULT_BACKEND = "redis://127.0.0.1:6379/1"
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_ALWAYS_EAGER = True  # mislim da ne treba
