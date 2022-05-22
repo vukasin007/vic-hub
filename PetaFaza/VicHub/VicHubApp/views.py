@@ -178,7 +178,8 @@ def category_req(request: HttpRequest, category_id): #comile
     jokes = []
     for belonging in belongings:
         joke = Joke.objects.get(pk=belonging.id_joke.id_joke)
-        jokes.append(joke)
+        if(joke.status == "A"):
+            jokes.append(joke)
     context= {
         "jokes" : jokes,
         "category" : category,
