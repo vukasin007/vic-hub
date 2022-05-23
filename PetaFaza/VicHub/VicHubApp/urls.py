@@ -9,7 +9,8 @@ urlpatterns = [
     path('register/', register_req, name='register'),
     path('all_categories/', all_categories, name='all_categories'),
     # path('register_admin/', register_admin_req, name='register_admin'),
-    # path('delete_user_admin/<int:user_id>', register_admin_req, name='register_admin'),# moze li preko setItem i getItem
+    path('admin_all_users/', admin_all_users, name='admin_all_users'),
+    path('delete_user_admin/<int:user_id>', delete_user_admin, name='delete_user_admin'),
     path('profile/', profile, name='profile'),
 
     path('joke/<int:joke_id>', joke , name='joke'), #comi

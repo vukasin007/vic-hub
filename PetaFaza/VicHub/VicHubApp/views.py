@@ -1,20 +1,33 @@
 from django.contrib.auth import logout, authenticate, login
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import Group
+from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.http import HttpRequest
 from django.contrib import messages
-from .models import *
-from django.contrib.auth.decorators import login_required, permission_required
 
+from .models import *
 from .forms import CustomUserCreationForm
+
+
+def is_guest(user):
+    return not user.is_authenticated
+
+
+def is_moderator(user):
+    return user.groups.filter(name='moderator').exists() or user.groups.filter(name='admin').exists()
+
+
+def is_admin(user):
+    return user.groups.filter(name='admin').exists()
 
 
 def index(request: HttpRequest):
     return render(request, 'index.html')
 
 
+@user_passes_test(is_guest, login_url='home', redirect_field_name=None)
 def register_req(request: HttpRequest):
     form = CustomUserCreationForm(data=request.POST or None)
     if request.method == 'POST':
@@ -30,6 +43,7 @@ def register_req(request: HttpRequest):
     })
 
 
+@user_passes_test(is_guest, login_url='home', redirect_field_name=None)
 def login_req(request: HttpRequest):
     form = AuthenticationForm(request=request, data=request.POST or None)
     if request.method == 'POST':
@@ -37,15 +51,10 @@ def login_req(request: HttpRequest):
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
-            if user is not None:
+            if (user is not None) and (user.status == 'A'):
                 login(request, user)
                 messages.success(request, 'Uspešno ste se prijavili.')
-                if user.groups.filter(name='basic').exists():
-                    return render(request, 'index.html')
-                if user.groups.filter(name='moderator').exists():
-                    return render(request, 'index.html')
-                if user.groups.filter(name='admin').exists():
-                    return render(request, 'index.html')
+                return redirect('home')
             else:
                 messages.error(request, 'Prijava nije uspela. Podaci su nevalidni.')
         else:
@@ -53,6 +62,43 @@ def login_req(request: HttpRequest):
     return render(request, 'login.html', {
         'form': form
     })
+
+
+@login_required(login_url='login')
+@user_passes_test(is_admin, login_url='home', redirect_field_name=None)
+def admin_all_users(request: HttpRequest):
+    return render(request, 'admin_all_users.html', {
+        'users': User.objects.filter(Q(type='U') | Q(type='M'))
+    })
+
+
+@login_required(login_url='login')
+@user_passes_test(is_admin, login_url='home', redirect_field_name=None)
+def delete_user_admin(req: HttpRequest, user_id: int):
+    user = User.objects.get(pk=user_id)
+    user.status = 'B'
+    user.subscribed = 'N'
+    user.save()
+    for request in Request.objects.filter(id_user=user):
+        if request.status == 'P':
+            request.status = 'R'
+            request.id_user_reviewed = req.user
+            request.save()
+    for grade in Grade.objects.filter(id_user=user):
+        grade.delete()
+    for comment in Comment.objects.filter(id_user=user):
+        comment.status = 'D'
+        comment.save()
+    for joke in Joke.objects.filter(id_user_created=user):
+        if joke.status == 'P':
+            joke.id_user_reviewed = req.user
+        joke.status = 'D'
+        joke.save()
+        for comment in Comment.objects.filter(id_joke=joke):
+            comment.status = 'D'
+            comment.save()
+    messages.success(req, f'Korisnik {user.username} je uspešno obrisan.')
+    return redirect('admin_all_users')
 
 
 def all_categories(request : HttpRequest): #comile
