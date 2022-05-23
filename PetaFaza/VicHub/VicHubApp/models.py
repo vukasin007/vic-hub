@@ -71,7 +71,7 @@ class Grade(models.Model):
     id_grade = models.AutoField(primary_key=True)
     id_joke = models.ForeignKey('Joke', models.DO_NOTHING, db_column='id_joke')
     id_user = models.ForeignKey('User', models.DO_NOTHING, db_column='id_user')
-    grade = models.IntegerField()
+    grade = models.IntegerField()   # 1 - 5
 
     class Meta:
         managed = True

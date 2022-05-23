@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--vukasin007-->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script src="./scripts/script.js"></script>
+    <title>Document</title>
+</head>
+<body>
+
+    <div class="topnav">
+        <a href="{% url 'home' %}" class="main"><p class="unskew">VicHub</p></a>
+        <a href="{% url 'all_categories' %}"><p class="unskew">Citaj viceve</p></a>
+        {% if user.is_authenticated%}
+        <a href="{% url 'add_joke' %}" ><p class="unskew">Dodaj vic</p></a>
+        {% endif %}
+        <!---- <a href="./add_joke.html"><p class="unskew">Dodaj vic</p></a>
+       <a href="content.html"><p class="unskew">Opcija levo</p></a>--->
+
+
+        {% if user.is_authenticated %}
+            <a href="{% url 'logout' %}" class="right main"><p class="unskew">Odjavite se</p></a>
+            {% else%}
+            <a href="{% url 'login' %}" class="right main"><p class="unskew">Prijavite se</p></a>
+        {% endif %}
+        {% if user.is_authenticated %}
+            <a href="{% url 'profile' %}" class="right main"><p class="unskew">Pogledaj profil</p></a>
+            {% else%}
+            <a href="{% url 'register' %}" class="right main"><p class="unskew">Registrujte se</p></a>
+        {% endif %}
+    </div>
+
+    <div class="content welcome">
+        <!--  vic  -->
+        <h2>{{joke.title}}</h2>
+        <h5>Autor: {{autor.username}}</h5>
+        <div class="singlejoke inputlabel">
+            <p>
+                {{ joke.content|linebreaks }}
+                <hr>
+            </p>
+        </div>
+
+        <!--  kategorije za selectovanje  -->
+        <div class="users">
+            <ul class="users">
+                {% for category in categories %}
+                    <li class="inputlabel2">
+                        <form method="post" >
+                            {% csrf_token %}
+                            <a href="{% url 'accept_joke' joke.id_joke category.id_category %}">{{category.name}}</a>
+                            <!--<button class="inputlabel2" type="submit" value="{{category.name}}" name="vest_id" style="background-color: #2222dd">{{category.name}}</button>-->
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.forms import AuthenticationForm
@@ -8,7 +10,7 @@ from django.http import HttpRequest
 from django.contrib import messages
 
 from .models import *
-from .forms import CustomUserCreationForm
+from .forms import *
 
 
 def is_guest(user):
@@ -117,7 +119,7 @@ def logout_req(request: HttpRequest):
         messages.info(request, 'Uspesna odjava!')
     except:
         messages.error(request, 'Niste prijavljeni.')
-    return render(request, 'index.html')
+    return redirect('home')
 
 
 # vukasin007
@@ -173,6 +175,12 @@ def accept_mod_request(request: HttpRequest, request_id: int):
         currrequest.status = "A"
         currrequest.id_user_reviewed = logedmod
         currrequest.save()
+
+        promoted: User = currrequest.id_user
+        if promoted.type == "U":    # da neko ne bi skinuo adminu privilegije
+            promoted.type = "M"
+            promoted.save()
+
         messages.info(request, 'Uspesno prihvatanje zahteva za moderatora!')
     except:
         messages.error(request, 'Neuspesno prihvatanje zahteva za moderatora.')
@@ -207,24 +215,189 @@ def remove_mod(request: HttpRequest, user_id: int):
             return render(request, 'index.html')
         aimedmoderator: User = User.objects.get(pk=user_id)
         aimedmoderator.type = "U"
-        # promeni grupu usera, kao preko django admina
-        #   #   #
-        #  here #
-        #   #   #
         aimedmoderator.save()
-        messages.info(request, 'Uspesno odbijanje zahteva za moderatora!')
+        messages.info(request, 'Uspesno oduzimanje moderator privilegija!')
     except:
-        messages.error(request, 'Neuspesno odbijanje zahteva za moderatora.')
+        messages.error(request, 'Neuspesno oduzimanje moderator privilegija.')
     return render(request, 'index.html')    # treba render stranica za prihvatanje/odbijanje zahteva
 
 
-def category_req(request: HttpRequest, category_id): #comile
+# vukasin007
+@login_required(login_url='login')
+def all_requests_mod(request: HttpRequest):
+    try:
+        logedmod: User = User.objects.get(username=request.user.get_username())
+        if logedmod.type != "A" and logedmod.type != "M":
+            messages.error(request, 'Nemate privilegije.')
+            return render(request, 'index.html')
+        all_requests_mod = Request.objects.all()
+    except:
+        all_requests_mod = []
+        messages.info(request, 'Neuspesno prikazivanje svih zahteva za moderatora.')
+    context = {
+        'all_requests_for_mod': all_requests_mod,
+    }
+    return render(request, 'nema stranice za to', context)  # !!!!!!!!!!!!!!!!!!!!! nema stranice za ovo
+
+
+# vukasin007
+@login_required(login_url='login')
+def pending_jokes(request: HttpRequest):
+    try:
+        logedmod: User = User.objects.get(username=request.user.get_username())
+        if logedmod.type != "A" and logedmod.type != "M":
+            messages.error(request, 'Nemate privilegije.')
+            return render(request, 'index.html')
+        all_pending_jokes = Joke.objects.filter(status="P")
+    except:
+        all_pending_jokes = []
+        messages.info(request, 'Neuspesno prikazivanje svih neodobrenih viceva.')
+    context = {
+        'all_pending_jokes': all_pending_jokes,
+    }
+    return render(request, 'new_content_review.html', context)
+
+
+# vukasin007
+@login_required(login_url='login')
+def choose_category(request: HttpRequest, joke_id: int):
+    currjoke: Joke = Joke.objects.get(pk=joke_id)
+    categories = Category.objects.all()
+    context = {
+        "joke": currjoke,
+        "categories": categories,
+    }
+    return render(request, "choose_category.html", context)
+
+
+# vukasin007
+@login_required(login_url='login')
+def accept_joke(request: HttpRequest, joke_id: int, category_id: int):
+    try:
+        logedmod: User = User.objects.get(username=request.user.get_username())
+        if logedmod.type != "A" and logedmod.type != "M":   # moze i preko group privilegija
+            messages.error(request, 'Nemate privilegije.')
+            return render(request, 'index.html')
+        if request.method == request.GET:
+            messages.error(request, 'Method nije POST')
+            return render(request, 'index.html')
+        currjoke: Joke = Joke.objects.get(pk=joke_id)
+        currjoke.status = "A"
+        currjoke.id_user_reviewed = logedmod
+        currjoke.date_posted = datetime.datetime.now()
+        currjoke.save()
+        belongsto = BelongsTo()
+        belongsto.id_joke = currjoke
+        belongsto.id_category = Category.objects.get(pk=category_id)
+        belongsto.save()
+        messages.info(request, 'Uspesno odobravanje vica!')
+    except:
+        messages.error(request, 'Neuspesno odobravanje vica.')
+    return redirect('pending_jokes')
+
+
+# vukasin007
+@login_required(login_url='login')
+def reject_joke(request: HttpRequest, joke_id: int):
+    try:
+        logedmod: User = User.objects.get(username=request.user.get_username())
+        if logedmod.type != "A" and logedmod.type != "M":
+            messages.error(request, 'Nemate privilegije.')
+            return render(request, 'index.html')
+        if request.method == request.GET:
+            messages.error(request, 'Method nije POST')
+            return render(request, 'index.html')
+        currjoke: Joke = Joke.objects.get(pk=joke_id)
+        currjoke.status = "R"
+        currjoke.id_user_reviewed = logedmod
+        currjoke.date_posted = datetime.datetime.now()
+        currjoke.save()
+        messages.info(request, 'Uspesno odbijanje vica!')
+    except:
+        messages.error(request, 'Neuspesno odbijanje vica.')
+    return redirect('pending_jokes')
+
+
+# vukasin007
+@login_required(login_url='login')
+def delete_comment(request: HttpRequest, comment_id: int):
+    logedmod: User = User.objects.get(username=request.user.get_username())
+    if logedmod.type != "A" and logedmod.type != "M":  # moze i preko group privilegija
+        messages.error(request, 'Nemate privilegije.')
+        return render(request, 'index.html')
+    if request.method == request.GET:
+        messages.error(request, 'Method nije POST')
+        return render(request, 'index.html')
+    currkom: Comment = Comment.objects.get(pk=comment_id)
+    currkom.status = "D"
+    currkom.save()
+    messages.info(request, 'Uspesno brisanje komentara!')
+    return redirect('home')
+
+
+# vukasin007
+@login_required(login_url='login')
+def add_category_req(request: HttpRequest):
+    logedmod: User = User.objects.get(username=request.user.get_username())
+    if logedmod.type != "A" and logedmod.type != "M":  # moze i preko group privilegija
+        messages.error(request, 'Nemate privilegije.')
+        return render(request, 'index.html')
+    forma: AddNewCategoryForm = AddNewCategoryForm(data=request.POST or None)
+    if forma.is_valid():
+        nova_kategorija = forma.cleaned_data.get('newCategoryName')
+        kategorija: Category = Category()
+        kategorija.name = nova_kategorija
+        kategorija.save()
+        messages.info(request, 'Uspesno kreiranje nove kategorije!')
+    context = {
+        'addCategoryForm': forma,
+    }
+    return render(request, 'stranica za dodavanje kategorije', context)  # fali stranica za dodavanje kategorije
+
+
+# vukasin007
+@login_required(login_url='login')
+def grade_joke(request: HttpRequest, joke_id: int, grade: int):
+    if request.method == request.GET:
+        messages.error(request, 'Method nije POST')
+        return render(request, 'index.html')
+    curruser: User = User.objects.get(username=request.user.get_username())
+    if grade < 1:
+        grade = 1
+    elif grade > 5:
+        grade = 5
+    flag_already_graded: bool = False
+    ocene_usera = Grade.objects.filter(id_user=curruser)
+    for ocena in ocene_usera:
+        if ocena.id_joke == joke_id:
+            ocena.grade = grade
+            ocena.save()
+            flag_already_graded = True
+            break
+    if not flag_already_graded:
+        ocena: Grade = Grade()
+        ocena.id_joke = Joke.objects.get(pk=joke_id)
+        ocena.id_user = curruser
+        ocena.grade = grade
+        ocena.save()
+    messages.info(request, 'Ocenili ste vic sa ocenom: ' + str(grade))
+    try:
+        currjoke = Joke.objects.get(pk=joke_id)
+        firstBelongsTo = BelongsTo.objects.filter(id_joke=currjoke).first()
+        firstcategory = firstBelongsTo.id_category
+        return redirect('category', category_id=firstcategory.id_category)    # predji u prikaz iste kategorije
+    except:
+        return redirect('all_categories')
+
+
+def category_req(request: HttpRequest, category_id):  # comile
     belongings = BelongsTo.objects.filter(id_category=category_id)
     category = Category.objects.get(pk=category_id)
     jokes = []
     for belonging in belongings:
         joke = Joke.objects.get(pk=belonging.id_joke.id_joke)
-        jokes.append(joke)
+        if(joke.status == "A"):
+            jokes.append(joke)
     context= {
         "jokes" : jokes,
         "category" : category,
