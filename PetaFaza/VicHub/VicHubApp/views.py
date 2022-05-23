@@ -103,6 +103,21 @@ def delete_user_admin(req: HttpRequest, user_id: int):
     return redirect('admin_all_users')
 
 
+@login_required(login_url='login')
+@user_passes_test(is_moderator, login_url='home', redirect_field_name=None)
+def delete_joke(request: HttpRequest, joke_id: int):
+    joke = Joke.objects.get(pk=joke_id)
+    if joke.status == 'P':
+        joke.id_user_reviewed = request.user
+    joke.status = 'D'
+    joke.save()
+    for comment in Comment.objects.filter(id_joke=joke):
+        comment.status = 'D'
+        comment.save()
+    messages.success(request, 'Vic je uspešno obrisan.')
+    return redirect('home')
+
+
 def all_categories(request : HttpRequest): #comile
     categories = Category.objects.all()
     context = {

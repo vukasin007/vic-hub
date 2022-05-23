@@ -15,7 +15,7 @@ urlpatterns = [
 
     path('joke/<int:joke_id>', joke, name='joke'),  # comi
     path('add_joke/', add_joke, name='add_joke'),  # comi
-    # path('delete_joke/<int:joke_id>', delete_joke, name='delete_joke'),
+    path('delete_joke/<int:joke_id>', delete_joke, name='delete_joke'),
 
     path('category/<int:category_id>', category_req, name='category'),  # comi
     path('add_category/', add_category_req, name='add_category'),  # vukasin007
