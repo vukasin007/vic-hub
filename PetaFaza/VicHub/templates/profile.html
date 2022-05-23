@@ -14,11 +14,27 @@
     <div class="topnav">
         <a href="{% url 'home' %}" class="main"><p class="unskew">VicHub</p></a>
         <a href="{% url 'all_categories' %}"><p class="unskew">Citaj viceve</p></a>
-        <a href="{% url 'add_joke' %}" ><p class="unskew">Dodaj vic</p></a>
-       
-        <a href="{% url 'logout' %}" class="right main"><p class="unskew">Odjavite se</p></a>
-        <a href="{% url 'profile' %}" class="right main"><p class="unskew">Pogledaj profil</p></a>
-        
+        {% if user.is_authenticated%}
+            <a href="{% url 'add_joke' %}" ><p class="unskew">Dodaj vic</p></a>
+            {% if user.type == "M" or user.type == "A" %}
+                <a href="{% url 'pending_jokes' %}" ><p class="unskew">Neodobreni vicevi</p></a>
+            {% else %}
+                <a href="{% url 'request_mod' %}" ><p class="unskew">Zahtev za moderatora</p></a>
+            {% endif %}
+        {% endif %}
+        <!---<a href="./add_joke.html"><p class="unskew">Dodaj vic</p></a>--->
+        <!---<a href="#"><p class="unskew">Opcija levo</p></a>--->
+
+        {% if user.is_authenticated %}
+            <a href="{% url 'logout' %}" class="right main"><p class="unskew">Odjavite se</p></a>
+            {% else%}
+            <a href="{% url 'login' %}" class="right main"><p class="unskew">Prijavite se</p></a>
+        {% endif %}
+        {% if user.is_authenticated %}
+            <a href="{% url 'profile' %}" class="right main"><p class="unskew">Pogledaj profil</p></a>
+            {% else%}
+            <a href="{% url 'register' %}" class="right main"><p class="unskew">Registrujte se</p></a>
+        {% endif %}
     </div>
 
     <div class="welcome content">
