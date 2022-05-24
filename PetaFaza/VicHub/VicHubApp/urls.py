@@ -38,8 +38,9 @@ urlpatterns = [
     path('accept_mod_request/<int:request_id>', accept_mod_request, name='accept_mod_request'),  # vukasin007
     path('reject_mod_request/<int:request_id>', reject_mod_request, name='reject_mod_request'),  # vukasin007
 
-    # path('change_personal_data/', change_personal_data, name='change_personal_data'),  # vukasin007
-    # path * broj polja formi + forma * broj polja u formi
+    path('change_personal_data/', change_personal_data, name='change_personal_data'),  # vukasin007
 
     path('remove_mod/<int:user_id>', remove_mod, name='remove_mod'),  # vukasin007
+
+    # ! NOTE: Za neke od viewova false stranice, potrebno promeniti kada se dodaju.
 ]

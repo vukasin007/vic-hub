@@ -1,5 +1,5 @@
 import datetime
-
+import re
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.forms import AuthenticationForm
@@ -405,13 +405,70 @@ def grade_joke(request: HttpRequest, joke_id: int, grade: int):
         return redirect('all_categories')
 
 
+# vukasin007
+@login_required(login_url='login')
+def change_personal_data(request: HttpRequest):
+    curruser: User = User.objects.get(username=request.user.get_username())
+    usernameForm = ChangeUsernameForm(data=request.POST or None)
+    if usernameForm.is_valid():
+        newUsername = usernameForm.cleaned_data.get('newUsername')
+        if re.search("^[A-Za-z\d]{3,20}$", newUsername):
+            curruser.username = newUsername
+            messages.info("promenjen username")
+        else:
+            messages.error("los format")
+    firstnameForm = ChangeFirstNameForm(data=request.POST or None)
+    if firstnameForm.is_valid():
+        newFirstName = firstnameForm.cleaned_data.get('newFirstName')
+        if re.search("^[A-Za-z]{2,20}$", newFirstName):
+            curruser.first_name = newFirstName
+            messages.info("promenjen first name")
+        else:
+            messages.error("los format")
+    lastnameForm = ChangeLastNameForm(data=request.POST or None)
+    if lastnameForm.is_valid():
+        newLastName = lastnameForm.cleaned_data.get('newLastName')
+        if re.search("^[A-Za-z]{2,20}$", newLastName):
+            curruser.last_name = newLastName
+            messages.info("promenjen last name")
+        else:
+            messages.error("los format")
+    mailForm = ChangeMailForm(data=request.POST or None)
+    if mailForm.is_valid():
+        newMail = mailForm.cleaned_data.get('newMail')
+        if re.search("^[A-Za-z\d]{2,20}@[A-Za-z\d]{2,20}\.[A-Za-z\d]{2,3}$", newMail):
+            curruser.email = newMail
+            messages.info("promenjen email")
+        else:
+            messages.error("los format")
+    passwordForm = ChangePasswordForm(data=request.POST or None)
+    if passwordForm.is_valid():
+        firstPass = passwordForm.cleaned_data.get('newPassword')
+        secondPass = passwordForm.cleaned_data.get('confirm')
+        if firstPass != secondPass:
+            messages.error("ne poklapa se potvrda.")
+        elif re.search("^.{8}$", firstPass):    # za sada bez detaljnih provera
+            curruser.set_password(firstPass)
+            messages.info("promenjen password")
+        else:
+            messages.error("los format")
+    context = {
+        'usernameForm': usernameForm,
+        'firstNameForm': firstnameForm,
+        'lastNameForm': lastnameForm,
+        'mailForm': mailForm,
+        'passwordForm': passwordForm
+    }
+    return render(request, 'stranica za promenu licnih podataka', context)
+
+
 def category_req(request: HttpRequest, category_id):  # comile
     belongings = BelongsTo.objects.filter(id_category=category_id)
     category = Category.objects.get(pk=category_id)
     jokes = []
     for belonging in belongings:
         joke = Joke.objects.get(pk=belonging.id_joke.id_joke)
-        if(joke.status == "A"):
+        if joke.status == "A":
             jokes.append(joke)
     context= {
         "jokes" : jokes,

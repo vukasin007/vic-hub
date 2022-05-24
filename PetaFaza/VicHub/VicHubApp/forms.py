@@ -34,3 +34,27 @@ class AddNewCategoryForm(Form):
     newCategoryName = forms.CharField(max_length=30)
 
 
+# vukasin007
+class ChangeUsernameForm(Form):
+    newUsername = forms.CharField(max_length=30)
+
+
+# vukasin007
+class ChangeFirstNameForm(Form):
+    newFirstName = forms.CharField(max_length=30)
+
+
+# vukasin007
+class ChangeLastNameForm(Form):
+    newLastName = forms.CharField(max_length=30)
+
+
+# vukasin007
+class ChangeMailForm(Form):
+    newMail = forms.CharField(max_length=40)
+
+
+# vukasin007
+class ChangePasswordForm(Form):
+    newPassword = forms.PasswordInput()
+    confirm = forms.PasswordInput()
