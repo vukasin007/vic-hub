@@ -179,7 +179,7 @@ def request_mod(request: HttpRequest):
         messages.info(request, 'Uspesno formiran zahtev za moderatora!')
     except:
         messages.error(request, 'Neuspesan zahtev za moderatora.')
-    return render(request, 'index.html')
+    return redirect('home')
 
 
 # vukasin007
