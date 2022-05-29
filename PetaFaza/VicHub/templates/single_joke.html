@@ -40,6 +40,9 @@
     <div class="welcome content">
         <h2>{{joke.title}}</h2>
         <h5>Autor: {{autor.username}}</h5>
+        <h6>{% for message in messages.WARNING %}
+                    <p style="color: red;">{{ message }}</p>
+                {% endfor %}</h6>
         <div class="singlejoke inputlabel">
             <p>
                 {{ joke.content|linebreaks }}

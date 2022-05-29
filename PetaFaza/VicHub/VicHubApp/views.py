@@ -394,11 +394,18 @@ def grade_joke(request: HttpRequest, joke_id: int): #gotovo
         messages.error(request, 'Method nije POST')
         return render(request, 'index.html')
     curruser: User = User.objects.get(username=request.user.get_username())
+    joke_curr = Joke.objects.get(pk=joke_id)
+
+    if joke_curr.id_user_created.username == request.user.get_username():
+        messages.warning(request, "Ne možete oceniti svoj vic")
+        return redirect("joke", joke_id=joke_id)
+
     grade = int(request.POST['grade'])
     if grade < 1:
         grade = 1
     elif grade > 5:
         grade = 5
+
     flag_already_graded: bool = False
     ocene_usera = Grade.objects.filter(id_user=curruser)
     for ocena in ocene_usera:
