@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <title>{% block title %}Base Title{% endblock %}</title>
+</head>
+<body>
+    <div class="topnav">
+        <a href="{% url 'home' %}" class="main"><p class="unskew">VicHub</p></a>
+        <a href="{% url 'all_categories' %}"><p class="unskew">Citaj viceve</p></a>
+        {% if user.is_authenticated%}
+            <a href="{% url 'add_joke' %}" ><p class="unskew">Dodaj vic</p></a>
+            {% if user.type == "M" or user.type == "A" %}
+                <a href="{% url 'pending_jokes' %}" ><p class="unskew">Neodobreni vicevi</p></a>
+                <a href="{% url 'all_requests_mod' %}" ><p class="unskew">Zahtevi za moderatore</p></a>
+            {% else %}
+                <a href="{% url 'request_mod' %}" ><p class="unskew">Zahtev za moderatora</p></a>
+            {% endif %}
+            <a href="{% url 'logout' %}" class="right main"><p class="unskew">Odjavite se</p></a>
+            <a href="{% url 'profile' %}" class="right main"><p class="unskew">{{ user.username }}</p></a>
+        {% else %}
+            <a href="{% url 'login' %}" class="right main"><p class="unskew">Prijavite se</p></a>
+            <a href="{% url 'register' %}" class="right main"><p class="unskew">Registrujte se</p></a>
+        {% endif %}
+    </div>
+
+    <div class="content welcome">
+        {% block content %}
+        
+        {% endblock %}
+    </div>
+
+</body>
+</html>
