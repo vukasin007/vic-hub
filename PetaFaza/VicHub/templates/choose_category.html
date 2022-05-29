@@ -39,30 +39,31 @@
     </div>
 
     <div class="content welcome">
-        <!--  vic  -->
-        <h2>{{joke.title}}</h2>
-        <h5>Autor: {{autor.username}}</h5>
-        <div class="singlejoke inputlabel">
-            <p>
-                {{ joke.content|linebreaks }}
-                <hr>
-            </p>
-        </div>
+        <form method="post" action="{% url 'accept_joke' joke.id_joke %}">
+            {% csrf_token %}
+            <!--  vic  -->
+            <h2>{{joke.title}}</h2>
+            <h5>Autor: {{autor.username}}</h5>
+            <div class="singlejoke inputlabel">
+                <p>
+                    {{ joke.content|linebreaks }}
+                    <hr>
+                </p>
+                <input type="submit" value="Odaberi kategoriju" name="button_single" class="submitform submitauth">
+            </div>
 
-        <!--  kategorije za selectovanje  -->
-        <div class="users">
-            <ul class="users">
-                {% for category in categories %}
-                    <li class="inputlabel2">
-                        <form method="post" >
-                            {% csrf_token %}
-                            <a href="{% url 'accept_joke' joke.id_joke category.id_category %}">{{category.name}}</a>
-                            <!--<button class="inputlabel2" type="submit" value="{{category.name}}" name="vest_id" style="background-color: #2222dd">{{category.name}}</button>-->
-                        </form>
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
+            <!--  kategorije za selectovanje  -->
+                <div class="users">
+                    {% for category in categories %}
+                        <input type="checkbox" id="{{ category.id_category }}" name="kategorija" value="{{ category.id_category }}">
+                        <label for="{{ category.id_category }}">
+                            <div class="inputlabel2">
+                                    {{ category.name }}
+                            </div>
+                        </label>
+                    {% endfor %}
+                </div>
+        </form>
     </div>
 
 </body>

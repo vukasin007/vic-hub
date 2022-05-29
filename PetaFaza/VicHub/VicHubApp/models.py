@@ -34,11 +34,12 @@ class User(AbstractUser):
 
 
 class BelongsTo(models.Model):
-    id_joke = models.OneToOneField('Joke', models.DO_NOTHING, db_column='id_joke', primary_key=True)
+    id_joke = models.ForeignKey('Joke', models.DO_NOTHING, db_column='id_joke')
     id_category = models.ForeignKey('Category', models.DO_NOTHING, db_column='id_category')
+    id_belongs_to = models.AutoField(primary_key=True)
 
     class Meta:
-        managed = True
+        managed = False
         db_table = 'belongs_to'
         unique_together = (('id_joke', 'id_category'),)
 

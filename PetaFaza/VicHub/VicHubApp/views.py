@@ -30,7 +30,7 @@ def index(request: HttpRequest):
 
 
 @user_passes_test(is_guest, login_url='home', redirect_field_name=None)
-def register_req(request: HttpRequest):
+def register_req(request: HttpRequest): #gotovo
     form = CustomUserCreationForm(data=request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
@@ -46,7 +46,7 @@ def register_req(request: HttpRequest):
 
 
 @user_passes_test(is_guest, login_url='home', redirect_field_name=None)
-def login_req(request: HttpRequest):
+def login_req(request: HttpRequest): #gotovo
     form = AuthenticationForm(request=request, data=request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
@@ -105,7 +105,10 @@ def delete_user_admin(req: HttpRequest, user_id: int):
 
 @login_required(login_url='login')
 @user_passes_test(is_moderator, login_url='home', redirect_field_name=None)
-def delete_joke(request: HttpRequest, joke_id: int):
+def delete_joke(request: HttpRequest, joke_id: int): #gotovo
+    if request.method == request.GET:
+        messages.error(request, 'Method nije POST')
+        return render(request, 'index.html')
     joke = Joke.objects.get(pk=joke_id)
     if joke.status == 'P':
         joke.id_user_reviewed = request.user
@@ -118,7 +121,7 @@ def delete_joke(request: HttpRequest, joke_id: int):
     return redirect('home')
 
 
-def all_categories(request : HttpRequest): #comile
+def all_categories(request : HttpRequest): #comile #gotovo
     categories = Category.objects.all()
     context = {
         "categories": categories,
@@ -128,7 +131,7 @@ def all_categories(request : HttpRequest): #comile
 
 
 # vukasin007
-def logout_req(request: HttpRequest):
+def logout_req(request: HttpRequest): #gotovo
     try:
         logout(request)
         messages.info(request, 'Uspesna odjava!')
@@ -222,7 +225,7 @@ def reject_mod_request(request: HttpRequest, request_id: int):
 
 # vukasin007
 @login_required(login_url='login')
-def remove_mod(request: HttpRequest, user_id: int):
+def remove_mod(request: HttpRequest, user_id: int): #fali template
     try:
         logedmod: User = User.objects.get(username=request.user.get_username())
         if logedmod.type != "A":   # moze i preko group privilegija
@@ -239,7 +242,7 @@ def remove_mod(request: HttpRequest, user_id: int):
 
 # vukasin007
 @login_required(login_url='login')
-def all_requests_mod(request: HttpRequest):
+def all_requests_mod(request: HttpRequest): #fali template
     try:
         logedmod: User = User.objects.get(username=request.user.get_username())
         if logedmod.type != "A" and logedmod.type != "M":
@@ -257,7 +260,7 @@ def all_requests_mod(request: HttpRequest):
 
 # vukasin007
 @login_required(login_url='login')
-def pending_jokes(request: HttpRequest):
+def pending_jokes(request: HttpRequest): #gotovo
     try:
         logedmod: User = User.objects.get(username=request.user.get_username())
         if logedmod.type != "A" and logedmod.type != "M":
@@ -275,19 +278,21 @@ def pending_jokes(request: HttpRequest):
 
 # vukasin007
 @login_required(login_url='login')
-def choose_category(request: HttpRequest, joke_id: int):
+def choose_category(request: HttpRequest, joke_id: int): #gotovo
     currjoke: Joke = Joke.objects.get(pk=joke_id)
     categories = Category.objects.all()
+    autor = User.objects.get(pk=currjoke.id_user_created.id_user)
     context = {
         "joke": currjoke,
         "categories": categories,
+        "autor": autor
     }
     return render(request, "choose_category.html", context)
 
 
 # vukasin007
 @login_required(login_url='login')
-def accept_joke(request: HttpRequest, joke_id: int, category_id: int):
+def accept_joke(request: HttpRequest, joke_id: int): #gotovo
     try:
         logedmod: User = User.objects.get(username=request.user.get_username())
         if logedmod.type != "A" and logedmod.type != "M":   # moze i preko group privilegija
@@ -296,15 +301,26 @@ def accept_joke(request: HttpRequest, joke_id: int, category_id: int):
         if request.method == request.GET:
             messages.error(request, 'Method nije POST')
             return render(request, 'index.html')
+
+        kategorije = request.POST.getlist('kategorija')
+        if kategorije.count() == 0:
+            return redirect("choose_category", joke_id=joke_id)
+
         currjoke: Joke = Joke.objects.get(pk=joke_id)
         currjoke.status = "A"
         currjoke.id_user_reviewed = logedmod
         currjoke.date_posted = datetime.datetime.now()
         currjoke.save()
-        belongsto = BelongsTo()
-        belongsto.id_joke = currjoke
-        belongsto.id_category = Category.objects.get(pk=category_id)
-        belongsto.save()
+
+        for id_kat in kategorije:
+            id_cat = int(id_kat)
+            category = Category.objects.get(pk=id_cat)
+
+            belongsto = BelongsTo()
+            belongsto.id_joke = currjoke
+            belongsto.id_category = category
+            belongsto.save()
+
         messages.info(request, 'Uspesno odobravanje vica!')
     except:
         messages.error(request, 'Neuspesno odobravanje vica.')
@@ -313,7 +329,7 @@ def accept_joke(request: HttpRequest, joke_id: int, category_id: int):
 
 # vukasin007
 @login_required(login_url='login')
-def reject_joke(request: HttpRequest, joke_id: int):
+def reject_joke(request: HttpRequest, joke_id: int): #gotovo
     try:
         logedmod: User = User.objects.get(username=request.user.get_username())
         if logedmod.type != "A" and logedmod.type != "M":
@@ -335,7 +351,7 @@ def reject_joke(request: HttpRequest, joke_id: int):
 
 # vukasin007
 @login_required(login_url='login')
-def delete_comment(request: HttpRequest, comment_id: int):
+def delete_comment(request: HttpRequest, comment_id: int): #gotovo
     logedmod: User = User.objects.get(username=request.user.get_username())
     if logedmod.type != "A" and logedmod.type != "M":  # moze i preko group privilegija
         messages.error(request, 'Nemate privilegije.')
@@ -346,13 +362,14 @@ def delete_comment(request: HttpRequest, comment_id: int):
     currkom: Comment = Comment.objects.get(pk=comment_id)
     currkom.status = "D"
     currkom.save()
+    id_joke = int(request.POST['id_joke'])
     messages.info(request, 'Uspesno brisanje komentara!')
-    return redirect('home')
+    return redirect('joke', joke_id=id_joke)
 
 
 # vukasin007
 @login_required(login_url='login')
-def add_category_req(request: HttpRequest):
+def add_category_req(request: HttpRequest): #fali template
     logedmod: User = User.objects.get(username=request.user.get_username())
     if logedmod.type != "A" and logedmod.type != "M":  # moze i preko group privilegija
         messages.error(request, 'Nemate privilegije.')
@@ -372,11 +389,12 @@ def add_category_req(request: HttpRequest):
 
 # vukasin007
 @login_required(login_url='login')
-def grade_joke(request: HttpRequest, joke_id: int, grade: int):
+def grade_joke(request: HttpRequest, joke_id: int): #gotovo
     if request.method == request.GET:
         messages.error(request, 'Method nije POST')
         return render(request, 'index.html')
     curruser: User = User.objects.get(username=request.user.get_username())
+    grade = int(request.POST['grade'])
     if grade < 1:
         grade = 1
     elif grade > 5:
@@ -384,7 +402,7 @@ def grade_joke(request: HttpRequest, joke_id: int, grade: int):
     flag_already_graded: bool = False
     ocene_usera = Grade.objects.filter(id_user=curruser)
     for ocena in ocene_usera:
-        if ocena.id_joke == joke_id:
+        if ocena.id_joke.id_joke == joke_id:
             ocena.grade = grade
             ocena.save()
             flag_already_graded = True
@@ -407,7 +425,7 @@ def grade_joke(request: HttpRequest, joke_id: int, grade: int):
 
 # vukasin007
 @login_required(login_url='login')
-def change_personal_data(request: HttpRequest):
+def change_personal_data(request: HttpRequest): #fali template
     curruser: User = User.objects.get(username=request.user.get_username())
     usernameForm = ChangeUsernameForm(data=request.POST or None)
     if usernameForm.is_valid():
@@ -462,7 +480,7 @@ def change_personal_data(request: HttpRequest):
     return render(request, 'stranica za promenu licnih podataka', context)
 
 
-def category_req(request: HttpRequest, category_id):  # comile
+def category_req(request: HttpRequest, category_id):  # comile #gotovo
     belongings = BelongsTo.objects.filter(id_category=category_id)
     category = Category.objects.get(pk=category_id)
     jokes = []
@@ -477,9 +495,9 @@ def category_req(request: HttpRequest, category_id):  # comile
     return render(request, 'content.html', context)
 
 
-def joke(request: HttpRequest, joke_id): #comile
+def joke(request: HttpRequest, joke_id): #comile #gotovo
     joke = Joke.objects.get(pk=joke_id)
-    comments = Comment.objects.filter(id_joke=joke)
+    comments = Comment.objects.filter(id_joke=joke).filter(status="A")
     autor = User.objects.get(pk=joke.id_user_created.id_user)
     context = {
         "joke" : joke,
@@ -490,7 +508,7 @@ def joke(request: HttpRequest, joke_id): #comile
 
 
 @login_required(login_url='login')
-def add_joke(request: HttpRequest):
+def add_joke(request: HttpRequest): #gotovo
     if request.method == 'POST':
         title = request.POST['joke_title']
         content = request.POST['joke_content']
@@ -505,12 +523,12 @@ def add_joke(request: HttpRequest):
 
 
 @login_required(login_url='login')
-def profile(request: HttpRequest):
+def profile(request: HttpRequest): #gotovo
     return render(request, 'profile.html')
 
 
 @login_required(login_url='login')
-def add_comment(request: HttpRequest, joke_id):
+def add_comment(request: HttpRequest, joke_id): #gotovo
     joke = Joke.objects.get(pk=joke_id)
     context = {
         "joke": joke
@@ -525,6 +543,8 @@ def add_comment(request: HttpRequest, joke_id):
         number = jokes.count()+1
         new_comment.ordinal_number = number
         new_comment.status = 'A'
+        new_comment.date_posted = datetime.datetime.now()
         new_comment.save()
+        return redirect("joke", joke_id=joke.id_joke)
 
     return render(request, "add_comment.html", context)

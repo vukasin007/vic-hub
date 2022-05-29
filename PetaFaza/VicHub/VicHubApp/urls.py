@@ -25,10 +25,10 @@ urlpatterns = [
 
     path('pending_jokes/', pending_jokes, name='pending_jokes'),  # vukasin007
     path('choose_category/<int:joke_id>', choose_category, name='choose_category'),  # vukasin007
-    path('accept_joke/<int:joke_id>/<int:category_id>', accept_joke, name='accept_joke'),  # vukasin007
+    path('accept_joke/<int:joke_id>', accept_joke, name='accept_joke'),  # vukasin007 #/<int:category_id>
     path('reject_joke/<int:joke_id>', reject_joke, name='reject_joke'),  # vukasin007
 
-    path('grade_joke/<int:joke_id>/<int:grade>', grade_joke, name='grade_joke'),  # vukasin007
+    path('grade_joke/<int:joke_id>', grade_joke, name='grade_joke'),  # vukasin007
 
     path('subscribe_to_bilten/', subscribe_to_bilten, name='subscribe_to_bilten'),  # vukasin007
     path('unsubscribe_from_bilten/', unsubscribe_from_bilten, name='unsubscribe_from_bilten'),  # vukasin007

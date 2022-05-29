@@ -46,36 +46,68 @@
                 <hr>
             </p>
             {% if user.is_authenticated %}
-            <table class="table-for-joke">
-                <tr>
-            <form action="{% url 'add_comment' joke.id_joke %}" method="get">
-                {% csrf_token %}
-                <td rowspan="2"><input type="submit" value="Dodaj komentar" name="button_single" class="submitform submitauth"> </td>
-            </form>
+                {% if user.type == "M" or user.type == "A"%}
+                    <table class="table-for-joke">
+                    <tr>
+                        <form action="{% url 'grade_joke' joke.id_joke %}" method="post">
+                            {% csrf_token %}
+                            <td><input type="submit" value="Oceni" name="button_single" class="submitform submitauth"> </td>
+                            <td><input type="range" name="grade" width="2%" min="0" max="5"></td>
+                        </form>
+                    </tr>
+                    <tr>
+                        <form action="{% url 'add_comment' joke.id_joke %}" method="get">
+                            {% csrf_token %}
+                            <td><input type="submit" value="Dodaj komentar" name="button_single" class="submitform submitauth"> </td>
+                        </form>
 
-            <form action="{% url 'home' %}" method="get">
-                {% csrf_token %}
-                        <td><input type="range" name="grade" width="2%"></td>
-                </tr>
-                <tr>
-                    <td><input type="submit" value="Oceni" name="button_single" class="submitform submitauth"> </td>
-                </tr>
-            </form>
-                </table>
+                        <form action="{% url 'delete_joke' joke.id_joke %}" method="post">
+                            {% csrf_token %}
+                        <td><input type="submit" value="Ukloni vic" name="button_single" class="submitform submitauth"> </td>
+                        </form>
+                    </tr>
+                    </table>
+                 <!-- Ako nije admin ili moderator -->
+                {% else %}
+                    <table class="table-for-joke">
+                        <tr>
+                            <form action="{% url 'grade_joke' joke.id_joke %}" method="post">
+                                {% csrf_token %}
+                                <td><input type="submit" value="Oceni" name="button_single" class="submitform submitauth"> </td>
+                                <td><input type="range" name="grade" width="2%" min="0" max="5"></td>
+                            </form>
+                        </tr>
+                        <tr>
+                            <form action="{% url 'add_comment' joke.id_joke %}" method="get">
+                                {% csrf_token %}
+                                <td colspan="2"><input type="submit" value="Dodaj komentar" name="button_single" class="submitform submitauth"> </td>
+                            </form>
+                        </tr>
+                    </table>
+                {% endif %}
             {% endif %}
         </div>
         
-            <h5>Komentari</h5>
-            {% for comment in comments %}
+        <h5>Komentari</h5>
+        {% for comment in comments %}
             <div class="comment">
                 <h2>{{comment.id_user.username}}</h2>
                     <p>
                         {{comment.content|linebreaks}}
+                        <hr>
                     </p>
+               {% if user.is_authenticated %}
+                    {% if user.type == "M" or user.type == "A"%}
+                        <form action="{% url 'delete_comment' comment.id_comment %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="id_joke" value="{{ joke.id_joke }}">
+                            <input type="submit" value="Ukloni komentar" name="button_single" class="submitform submitauth">
+                        </form>
+                    {% endif %}
+               {% endif %}
             </div>
             <br>
-
-            {% endfor %}
+        {% endfor %}
             <!--<div class="comment">
                 <h2>Autor</h2>
                 <p>Comment comment comment comment <br>
