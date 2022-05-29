@@ -50,14 +50,14 @@ app.conf.update(
 #     )
 
 app.conf.beat_schedule = {
-    'tick-every-2-seconds': {
-        'task': 'tick',
-        'schedule': 2.0,
-    },
+    # 'tick-every-2-seconds': {
+    #     'task': 'tick',
+    #     'schedule': 2.0,
+    # },
     'send-emails-on-bilten': {
         'task': 'send-mail-function',
         # 'schedule': crontab(hour=10, minute=00, day_of_week=7),
-        'schedule': crontab(hour=10, minute=00),
+        'schedule': 10.0,
     }
 }
 
