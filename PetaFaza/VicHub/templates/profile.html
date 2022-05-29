@@ -46,6 +46,11 @@
             <p>Prezime: {{user.last_name}}</p>
             <p>Email: {{user.email}}</p>
             <p>Datum rodjenja: {{user.date_of_birth}}</p>
+            {% if user.subscribed == 'Y' %}
+                <a href="{% url 'unsubscribe_from_bilten' %}" style="text-decoration: none; color: black;">Odjavi se sa biltena</a>
+            {% else %}
+                <a href="{% url 'subscribe_to_bilten' %}" style="text-decoration: none; color: black;">Prijavi se na bilten</a>
+            {% endif %}
         </div>
     </div>
     

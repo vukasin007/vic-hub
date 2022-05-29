@@ -150,7 +150,7 @@ def subscribe_to_bilten(request: HttpRequest):
         messages.info(request, 'Uspesna prijava na bilten!')
     except:
         messages.error(request, 'Neuspesna prijava na bilten.')
-    return render(request, 'index.html')
+    return redirect('profile')
 
 
 # vukasin007
@@ -163,7 +163,7 @@ def unsubscribe_from_bilten(request: HttpRequest):
         messages.info(request, 'Uspesna odjava sa biltena!')
     except:
         messages.error(request, 'Neuspesna odjava sa biltena.')
-    return render(request, 'index.html')
+    return redirect('profile')
 
 
 # vukasin007
