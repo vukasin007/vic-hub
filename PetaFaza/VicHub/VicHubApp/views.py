@@ -37,7 +37,8 @@ def register_req(request: HttpRequest): #gotovo
             user = form.save()
             user.groups.add(Group.objects.get(name='basic'))
             messages.success(request, 'Uspešno ste se registrovali.')
-            return redirect('login')
+            login(request, user)
+            return redirect('home')
         else:
             messages.error(request, 'Registracija nije uspela. Podaci su nevalidni.')
     return render(request, 'register.html', {
@@ -126,7 +127,6 @@ def all_categories(request : HttpRequest): #comile #gotovo
     context = {
         "categories": categories,
     }
-
     return render(request, 'categories.html', context)
 
 
@@ -150,7 +150,7 @@ def subscribe_to_bilten(request: HttpRequest):
         messages.info(request, 'Uspesna prijava na bilten!')
     except:
         messages.error(request, 'Neuspesna prijava na bilten.')
-    return render(request, 'index.html')
+    return redirect('profile')
 
 
 # vukasin007
@@ -163,22 +163,22 @@ def unsubscribe_from_bilten(request: HttpRequest):
         messages.info(request, 'Uspesna odjava sa biltena!')
     except:
         messages.error(request, 'Neuspesna odjava sa biltena.')
-    return render(request, 'index.html')
+    return redirect('profile')
 
 
 # vukasin007
 @login_required(login_url='login')
 def request_mod(request: HttpRequest):
     try:
-        curruser = User.objects.get(username=request.user.get_username())
         currrequest: Request = Request()
         currrequest.status = "P"
-        currrequest.user = curruser
+        currrequest.id_user = User.objects.get(username=request.user.get_username())
         currrequest.save()
         messages.info(request, 'Uspesno formiran zahtev za moderatora!')
     except:
+        print('kurvaaa')
         messages.error(request, 'Neuspesan zahtev za moderatora.')
-    return render(request, 'index.html')
+    return redirect('home')
 
 
 # vukasin007
@@ -242,7 +242,8 @@ def remove_mod(request: HttpRequest, user_id: int): #fali template
 
 # vukasin007
 @login_required(login_url='login')
-def all_requests_mod(request: HttpRequest): #fali template
+@user_passes_test(is_admin)
+def all_requests_mod(request: HttpRequest):
     try:
         logedmod: User = User.objects.get(username=request.user.get_username())
         if logedmod.type != "A" and logedmod.type != "M":
@@ -255,7 +256,7 @@ def all_requests_mod(request: HttpRequest): #fali template
     context = {
         'all_requests_for_mod': all_requests_mod,
     }
-    return render(request, 'nema stranice za to', context)  # !!!!!!!!!!!!!!!!!!!!! nema stranice za ovo
+    return render(request, 'admin_all_requests_mod.html', context)
 
 
 # vukasin007
@@ -288,6 +289,12 @@ def choose_category(request: HttpRequest, joke_id: int): #gotovo
         "autor": autor
     }
     return render(request, "choose_category.html", context)
+
+@login_required(login_url='login')
+@user_passes_test(is_moderator, login_url='home', redirect_field_name=None)
+def add_category(request: HttpRequest):
+
+    return redirect('all_categories')
 
 
 # vukasin007
@@ -369,6 +376,7 @@ def delete_comment(request: HttpRequest, comment_id: int): #gotovo
 
 # vukasin007
 @login_required(login_url='login')
+@user_passes_test(is_moderator)
 def add_category_req(request: HttpRequest): #fali template
     logedmod: User = User.objects.get(username=request.user.get_username())
     if logedmod.type != "A" and logedmod.type != "M":  # moze i preko group privilegija
@@ -376,15 +384,17 @@ def add_category_req(request: HttpRequest): #fali template
         return render(request, 'index.html')
     forma: AddNewCategoryForm = AddNewCategoryForm(data=request.POST or None)
     if forma.is_valid():
+        print('asdionwqeoinoinasd')
         nova_kategorija = forma.cleaned_data.get('newCategoryName')
         kategorija: Category = Category()
         kategorija.name = nova_kategorija
         kategorija.save()
         messages.info(request, 'Uspesno kreiranje nove kategorije!')
+        return redirect('all_categories')
     context = {
         'addCategoryForm': forma,
     }
-    return render(request, 'stranica za dodavanje kategorije', context)  # fali stranica za dodavanje kategorije
+    return render(request, 'add_category.html', context)
 
 
 # vukasin007

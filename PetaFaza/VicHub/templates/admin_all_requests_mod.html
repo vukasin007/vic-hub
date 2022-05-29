@@ -41,19 +41,18 @@
     <div class="content welcome">
         <div class="users">
             <ul class="users">
-                {% for category in categories%}
-                    <li class="inputlabel2">
-                        <a href="{% url 'category' category.id_category %}">{{category.name}}</a>
-                    </li>
+                {% for request in all_requests_for_mod %}
+                    {% if request.status == 'P' %}
+                        <li class="inputlabel2">
+                            <h3>Korisnik: {{ request.id_user }}</h3>
+                            <a href="{% url 'accept_mod_request' request.id_request %}">Odobri</a>
+                            <a href="{% url 'reject_mod_request' request.id_request %}">Odbij</a>
+                        </li>
+                    {% endif %}
                 {% endfor %}
-                {% if user.type == 'M' or user.type == 'A' %}
-                    <li class="inputlabel2">
-                        <a href="{% url 'add_category' %}">+ Dodaj novu kategoriju</a>
-                    </li>
-                {% endif %}
             </ul>
         </div>
     </div>
-    
+
 </body>
 </html>
