@@ -127,9 +127,6 @@ def all_categories(request : HttpRequest): #comile #gotovo
     context = {
         "categories": categories,
     }
-
-
-
     return render(request, 'categories.html', context)
 
 
@@ -379,6 +376,7 @@ def delete_comment(request: HttpRequest, comment_id: int): #gotovo
 
 # vukasin007
 @login_required(login_url='login')
+@user_passes_test(is_moderator)
 def add_category_req(request: HttpRequest): #fali template
     logedmod: User = User.objects.get(username=request.user.get_username())
     if logedmod.type != "A" and logedmod.type != "M":  # moze i preko group privilegija
@@ -386,15 +384,17 @@ def add_category_req(request: HttpRequest): #fali template
         return render(request, 'index.html')
     forma: AddNewCategoryForm = AddNewCategoryForm(data=request.POST or None)
     if forma.is_valid():
+        print('asdionwqeoinoinasd')
         nova_kategorija = forma.cleaned_data.get('newCategoryName')
         kategorija: Category = Category()
         kategorija.name = nova_kategorija
         kategorija.save()
         messages.info(request, 'Uspesno kreiranje nove kategorije!')
+        return redirect('all_categories')
     context = {
         'addCategoryForm': forma,
     }
-    return render(request, 'stranica za dodavanje kategorije', context)  # fali stranica za dodavanje kategorije
+    return render(request, 'add_category.html', context)
 
 
 # vukasin007

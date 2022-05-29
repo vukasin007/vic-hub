@@ -7,7 +7,6 @@
     <!--Sergej Prosic-->
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <script src="./scripts/script.js"></script>
     <title>Document</title>
 </head>
 <body>
@@ -19,6 +18,7 @@
             <a href="{% url 'add_joke' %}" ><p class="unskew">Dodaj vic</p></a>
             {% if user.type == "M" or user.type == "A" %}
                 <a href="{% url 'pending_jokes' %}" ><p class="unskew">Neodobreni vicevi</p></a>
+                <a href="{% url 'all_requests_mod' %}" ><p class="unskew">Odobravanje novih moderatora</p></a>
             {% else %}
                 <a href="{% url 'request_mod' %}" ><p class="unskew">Zahtev za moderatora</p></a>
             {% endif %}
@@ -39,21 +39,13 @@
     </div>
 
     <div class="content welcome">
-        <div class="users">
-            <ul class="users">
-                {% for category in categories%}
-                    <li class="inputlabel2">
-                        <a href="{% url 'category' category.id_category %}">{{category.name}}</a>
-                    </li>
-                {% endfor %}
-                {% if user.type == 'M' or user.type == 'A' %}
-                    <li class="inputlabel2">
-                        <a href="{% url 'add_category' %}">+ Dodaj novu kategoriju</a>
-                    </li>
-                {% endif %}
-            </ul>
+        <div class="users" style="padding-top: 15%">
+            <form method="post">
+                {% csrf_token %}
+                {{ addCategoryForm }} <input type="submit" value="Dodaj">
+            </form>
         </div>
     </div>
-    
+
 </body>
 </html>
