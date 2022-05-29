@@ -1,58 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!--Sergej Prosic-->
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <script src="./scripts/script.js"></script>
-    <title>Document</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-    <div class="topnav">
-        <a href="{% url 'home' %}" class="main"><p class="unskew">VicHub</p></a>
-        <a href="{% url 'all_categories' %}"><p class="unskew">Citaj viceve</p></a>
-        {% if user.is_authenticated%}
-            <a href="{% url 'add_joke' %}" ><p class="unskew">Dodaj vic</p></a>
-            {% if user.type == "M" or user.type == "A" %}
-                <a href="{% url 'pending_jokes' %}" ><p class="unskew">Neodobreni vicevi</p></a>
-            {% else %}
-                <a href="{% url 'request_mod' %}" ><p class="unskew">Zahtev za moderatora</p></a>
-            {% endif %}
-        {% endif %}
-        <!---<a href="./add_joke.html"><p class="unskew">Dodaj vic</p></a>--->
-        <!---<a href="#"><p class="unskew">Opcija levo</p></a>--->
+{% block title %}
+    Admin page - all users
+{% endblock %}
 
-        {% if user.is_authenticated %}
-            <a href="{% url 'logout' %}" class="right main"><p class="unskew">Odjavite se</p></a>
-            {% else%}
-            <a href="{% url 'login' %}" class="right main"><p class="unskew">Prijavite se</p></a>
-        {% endif %}
-        {% if user.is_authenticated %}
-            <a href="{% url 'profile' %}" class="right main"><p class="unskew">Pogledaj profil</p></a>
-            {% else%}
-            <a href="{% url 'register' %}" class="right main"><p class="unskew">Registrujte se</p></a>
-        {% endif %}
+{% block content %}
+    <div class="users">
+        <ul class="users">
+            {% for request in all_requests_for_mod %}
+                {% if request.status == 'P' %}
+                    <li class="inputlabel2">
+                        <h3>Korisnik: {{ request.id_user }}</h3>
+                        <a href="{% url 'accept_mod_request' request.id_request %}">Odobri</a>
+                        <a href="{% url 'reject_mod_request' request.id_request %}">Odbij</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
     </div>
-
-    <div class="content welcome">
-        <div class="users">
-            <ul class="users">
-                {% for request in all_requests_for_mod %}
-                    {% if request.status == 'P' %}
-                        <li class="inputlabel2">
-                            <h3>Korisnik: {{ request.id_user }}</h3>
-                            <a href="{% url 'accept_mod_request' request.id_request %}">Odobri</a>
-                            <a href="{% url 'reject_mod_request' request.id_request %}">Odbij</a>
-                        </li>
-                    {% endif %}
-                {% endfor %}
-            </ul>
-        </div>
-    </div>
-
-</body>
-</html>
+{% endblock %}

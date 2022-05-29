@@ -1,69 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!--Sergej Prosic-->
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <title>Document</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-    <div class="topnav">
-        <a href="{% url 'home' %}" class="main"><p class="unskew">VicHub</p></a>
-        <a href="{% url 'all_categories' %}"><p class="unskew">Citaj viceve</p></a>
-        {% if user.is_authenticated%}
-        <a href="{% url 'add_joke' %}" ><p class="unskew">Dodaj vic</p></a>
-        {% endif %}
+{% block title %}
+    Admin page - all users
+{% endblock %}
 
-        {% if user.is_authenticated %}
-            <a href="{% url 'logout' %}" class="right main"><p class="unskew">Odjavite se</p></a>
-        {% else %}
-            <a href="{% url 'login' %}" class="right main"><p class="unskew">Prijavite se</p></a>
-        {% endif %}
-        {% if user.is_authenticated %}
-            <a href="{% url 'profile' %}" class="right main"><p class="unskew">Pogledaj profil</p></a>
-        {% else %}
-            <a href="{% url 'register' %}" class="right main"><p class="unskew">Registrujte se</p></a>
-        {% endif %}
+{% block content %}
+    <div class="users">
+        <ul class="users">
+
+            {% for user in users %}
+                <li class="inputlabel">
+                    <table>
+                        <tr>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.date_of_birth }}</td>
+                            <td>
+                                {% if user.status == 'A' %}
+                                    <a href="{% url 'delete_user_admin' user.id_user %}">Obriši</a>
+                                {% else %}
+                                    <a href="" style="color: gray;">Obriši</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </table>
+                </li>
+            {% endfor %}
+
+        </ul>
     </div>
 
-    <div class="welcome content">
-        <div class="users">
-            <ul class="users">
-
-                {% for user in users %}
-                    <li class="inputlabel">
-                        <table>
-                            <tr>
-                                <td>{{ user.username }}</td>
-                                <td>{{ user.email }}</td>
-                                <td>{{ user.date_of_birth }}</td>
-                                <td>
-                                    {% if user.status == 'A' %}
-                                        <a href="{% url 'delete_user_admin' user.id_user %}">Obriši</a>
-                                    {% else %}
-                                        <a href="" style="color: gray;">Obriši</a>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                        </table>
-                    </li>
-                {% endfor %}
-
-            </ul>
+    {% if messages %}
+        <div class="inputlabel">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
         </div>
+    {% endif %}
+{% endblock %}
 
-        {% if messages %}
-            <div class="inputlabel">
-                {% for message in messages %}
-                    <p>{{ message }}</p>
-                {% endfor %}
-            </div>
-        {% endif %}
-    </div>
-    
-</body>
-</html>

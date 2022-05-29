@@ -1,58 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!--Sergej Prosic-->
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <title>Document</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-    <div class="topnav">
-        <a href="{% url 'home' %}" class="main"><p class="unskew">VicHub</p></a>
-        <a href="{% url 'all_categories' %}"><p class="unskew">Citaj viceve</p></a>
-        {% if user.is_authenticated%}
-            <a href="{% url 'add_joke' %}" ><p class="unskew">Dodaj vic</p></a>
-            {% if user.type == "M" or user.type == "A" %}
-                <a href="{% url 'pending_jokes' %}" ><p class="unskew">Neodobreni vicevi</p></a>
-            {% else %}
-                <a href="{% url 'request_mod' %}" ><p class="unskew">Zahtev za moderatora</p></a>
-            {% endif %}
-        {% endif %}
-        <!---<a href="./add_joke.html"><p class="unskew">Dodaj vic</p></a>--->
-        <!---<a href="#"><p class="unskew">Opcija levo</p></a>--->
+{% load static %}
 
-        {% if user.is_authenticated %}
-            <a href="{% url 'logout' %}" class="right main"><p class="unskew">Odjavite se</p></a>
-            {% else%}
-            <a href="{% url 'login' %}" class="right main"><p class="unskew">Prijavite se</p></a>
-        {% endif %}
-        {% if user.is_authenticated %}
-            <a href="{% url 'profile' %}" class="right main"><p class="unskew">Pogledaj profil</p></a>
-            {% else%}
-            <a href="{% url 'register' %}" class="right main"><p class="unskew">Registrujte se</p></a>
+{% block title %}
+    Profil
+{% endblock %}
+
+{% block content %}
+    <h2>Profil</h2>
+    <div class="inputlabel profile">
+        <img src="{% static 'img/profile.png' %}" alt="asdasd" class="profilepic">
+        <p>Korisnicko ime: {{user.username}}</p>
+        <p>Ime: {{user.first_name}}</p>
+        <p>Prezime: {{user.last_name}}</p>
+        <p>Email: {{user.email}}</p>
+        <p>Datum rodjenja: {{user.date_of_birth}}</p>
+        {% if user.subscribed == 'Y' %}
+            <a href="{% url 'unsubscribe_from_bilten' %}" style="text-decoration: none; color: black;">Odjavi se sa biltena</a>
+        {% else %}
+            <a href="{% url 'subscribe_to_bilten' %}" style="text-decoration: none; color: black;">Prijavi se na bilten</a>
         {% endif %}
     </div>
-
-    <div class="welcome content">
-        <h2>Profil</h2>
-        <div class="inputlabel profile">
-            <img src="{% static 'img/profile.png' %}" alt="asdasd" class="profilepic">
-            <p>Korisnicko ime: {{user.username}}</p>
-            <p>Ime: {{user.first_name}}</p>
-            <p>Prezime: {{user.last_name}}</p>
-            <p>Email: {{user.email}}</p>
-            <p>Datum rodjenja: {{user.date_of_birth}}</p>
-            {% if user.subscribed == 'Y' %}
-                <a href="{% url 'unsubscribe_from_bilten' %}" style="text-decoration: none; color: black;">Odjavi se sa biltena</a>
-            {% else %}
-                <a href="{% url 'subscribe_to_bilten' %}" style="text-decoration: none; color: black;">Prijavi se na bilten</a>
-            {% endif %}
-        </div>
-    </div>
-    
-</body>
-</html>
+{% endblock %}
