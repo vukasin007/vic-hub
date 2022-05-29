@@ -128,6 +128,8 @@ def all_categories(request : HttpRequest): #comile #gotovo
         "categories": categories,
     }
 
+
+
     return render(request, 'categories.html', context)
 
 
@@ -171,13 +173,13 @@ def unsubscribe_from_bilten(request: HttpRequest):
 @login_required(login_url='login')
 def request_mod(request: HttpRequest):
     try:
-        curruser = User.objects.get(username=request.user.get_username())
         currrequest: Request = Request()
         currrequest.status = "P"
-        currrequest.user = curruser
+        currrequest.id_user = User.objects.get(username=request.user.get_username())
         currrequest.save()
         messages.info(request, 'Uspesno formiran zahtev za moderatora!')
     except:
+        print('kurvaaa')
         messages.error(request, 'Neuspesan zahtev za moderatora.')
     return redirect('home')
 
@@ -243,7 +245,8 @@ def remove_mod(request: HttpRequest, user_id: int): #fali template
 
 # vukasin007
 @login_required(login_url='login')
-def all_requests_mod(request: HttpRequest): #fali template
+@user_passes_test(is_admin)
+def all_requests_mod(request: HttpRequest):
     try:
         logedmod: User = User.objects.get(username=request.user.get_username())
         if logedmod.type != "A" and logedmod.type != "M":
@@ -256,7 +259,7 @@ def all_requests_mod(request: HttpRequest): #fali template
     context = {
         'all_requests_for_mod': all_requests_mod,
     }
-    return render(request, 'nema stranice za to', context)  # !!!!!!!!!!!!!!!!!!!!! nema stranice za ovo
+    return render(request, 'admin_all_requests_mod.html', context)
 
 
 # vukasin007
@@ -289,6 +292,12 @@ def choose_category(request: HttpRequest, joke_id: int): #gotovo
         "autor": autor
     }
     return render(request, "choose_category.html", context)
+
+@login_required(login_url='login')
+@user_passes_test(is_moderator, login_url='home', redirect_field_name=None)
+def add_category(request: HttpRequest):
+
+    return redirect('all_categories')
 
 
 # vukasin007
