@@ -37,7 +37,8 @@ def register_req(request: HttpRequest): #gotovo
             user = form.save()
             user.groups.add(Group.objects.get(name='basic'))
             messages.success(request, 'Uspešno ste se registrovali.')
-            return redirect('login')
+            login(request, user)
+            return redirect('home')
         else:
             messages.error(request, 'Registracija nije uspela. Podaci su nevalidni.')
     return render(request, 'register.html', {
