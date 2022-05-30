@@ -310,7 +310,9 @@ def accept_joke(request: HttpRequest, joke_id: int): #gotovo
             return render(request, 'index.html')
 
         kategorije = request.POST.getlist('kategorija')
-        if kategorije.count() == 0:
+
+        if kategorije.__len__() == 0:
+            messages.error(request,"Niste odabrali kategoriju")
             return redirect("choose_category", joke_id=joke_id)
 
         currjoke: Joke = Joke.objects.get(pk=joke_id)
