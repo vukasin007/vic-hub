@@ -170,6 +170,12 @@ def unsubscribe_from_bilten(request: HttpRequest):
 @login_required(login_url='login')
 def request_mod(request: HttpRequest):
     try:
+        requests = Request.objects.filter(id_user=request.user)
+        for request1 in requests:
+            if request1.status == "P" or request1 == "A":
+                messages.warning(request, "Vec ste poslali zahtev")
+                return redirect('home')
+
         currrequest: Request = Request()
         currrequest.status = "P"
         currrequest.id_user = User.objects.get(username=request.user.get_username())
@@ -537,6 +543,7 @@ def add_joke(request: HttpRequest): #gotovo
         new_joke.id_user_created = request.user
         new_joke.status = "P"
         new_joke.save()
+        messages.info(request,"Uspesno ste dodali vic")
     
     return render(request, "add_joke.html")
 
@@ -564,6 +571,7 @@ def add_comment(request: HttpRequest, joke_id): #gotovo
         new_comment.status = 'A'
         new_comment.date_posted = datetime.datetime.now()
         new_comment.save()
+        messages.info(request, "Uspesno ste dodali komentar")
         return redirect("joke", joke_id=joke.id_joke)
 
     return render(request, "add_comment.html", context)
