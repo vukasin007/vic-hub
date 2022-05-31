@@ -411,8 +411,10 @@ def add_category_req(request: HttpRequest): #fali template
         return render(request, 'index.html')
     forma: AddNewCategoryForm = AddNewCategoryForm(data=request.POST or None)
     if forma.is_valid():
-        print('asdionwqeoinoinasd')
         nova_kategorija = forma.cleaned_data.get('Naziv')
+        if (nova_kategorija.__len__() < 1):
+            messages.warning(request, "Niste uneli naziv kategorije")
+            return redirect("add_category")
         kategorija: Category = Category()
         kategorija.name = nova_kategorija
         kategorija.save()
@@ -555,7 +557,13 @@ def joke(request: HttpRequest, joke_id): #comile #gotovo
 def add_joke(request: HttpRequest): #gotovo
     if request.method == 'POST':
         title = request.POST['joke_title']
+        if (title.__len__() < 1):
+            messages.warning(request, "Niste uneli naslov vica")
+            return redirect("add_joke")
         content = request.POST['joke_content']
+        if (content.__len__() < 1):
+            messages.warning(request, "Niste uneli sadrzaj vica")
+            return redirect("add_joke")
         new_joke = Joke()
         new_joke.title=title
         new_joke.content=content
@@ -580,6 +588,9 @@ def add_comment(request: HttpRequest, joke_id): #gotovo
     }
     if request.method == "POST":
         content = request.POST["comment_content"]
+        if(content.__len__() < 1):
+            messages.warning(request,"Niste uneli komentar")
+            return redirect("add_comment", joke_id=joke_id)
         new_comment = Comment()
         new_comment.id_joke=joke
         new_comment.id_user = request.user
