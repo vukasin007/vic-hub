@@ -1,4 +1,3 @@
-import datetime
 import re
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -42,6 +41,26 @@ def register_req(request: HttpRequest): #gotovo
         else:
             messages.error(request, 'Registracija nije uspela. Podaci su nevalidni.')
     return render(request, 'register.html', {
+        'form': form
+    })
+
+
+@login_required(login_url='login')
+@user_passes_test(is_admin, login_url='home', redirect_field_name=None)
+def register_admin_req(request: HttpRequest):
+    form = CustomUserCreationForm(data=request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            user = form.save()
+            user.groups.add(Group.objects.get(name=request.POST.get('type')))
+            if request.POST.get('type') == 'moderator':
+                user.type = 'M'
+                user.save()
+            messages.success(request, 'Uspešno ste kreirali novog korisnika.')
+            return redirect('home')
+        else:
+            messages.error(request, 'Dodavanje korisnika nije uspelo. Podaci su nevalidni.')
+    return render(request, 'register_admin.html', {
         'form': form
     })
 
@@ -248,7 +267,7 @@ def remove_mod(request: HttpRequest, user_id: int): #fali template
 
 # vukasin007
 @login_required(login_url='login')
-@user_passes_test(is_admin)
+@user_passes_test(is_moderator, login_url='home', redirect_field_name=None)
 def all_requests_mod(request: HttpRequest):
     try:
         logedmod: User = User.objects.get(username=request.user.get_username())
@@ -384,7 +403,7 @@ def delete_comment(request: HttpRequest, comment_id: int): #gotovo
 
 # vukasin007
 @login_required(login_url='login')
-@user_passes_test(is_moderator)
+@user_passes_test(is_moderator, login_url='home', redirect_field_name=None)
 def add_category_req(request: HttpRequest): #fali template
     logedmod: User = User.objects.get(username=request.user.get_username())
     if logedmod.type != "A" and logedmod.type != "M":  # moze i preko group privilegija

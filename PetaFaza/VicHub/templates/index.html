@@ -8,6 +8,11 @@
     <h1>Dobrodosli na VicHub</h1><br>
     <a href="{% url 'all_categories' %}" class="submission" style="font-weight: bold;">Citaj viceve</a>
     {% if user.is_authenticated %}
-    <a href="{% url 'add_joke' %}" class="submission" style="font-weight: bold;">Dodaj vic</a>
+        <a href="{% url 'add_joke' %}" class="submission" style="font-weight: bold;">Dodaj vic</a>
+        {% if user.type == 'A' %}
+            <br><br><br>
+            <a href="{% url 'admin_all_users' %}" class="submission" style="font-weight: bold;">Svi korisnici</a>
+            <a href="{% url 'register_admin' %}" class="submission" style="font-weight: bold;">Dodaj korisnika</a>
+        {% endif %}
     {% endif %}
 {% endblock %}
