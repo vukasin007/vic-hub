@@ -5,21 +5,25 @@
 {% endblock %}
 
 {% block content %}
-    <div class="users">
-        <ul class="users">
+    <div class="users" style="align-content: center">
+        <ul class="users" style="text-align: center">
 
-            {% for user in users %}
-                <li class="inputlabel">
+            {% for user1 in users %}
+                <li class="inputlabel3" >
                     <table>
                         <tr>
-                            <td>{{ user.username }}</td>
-                            <td>{{ user.email }}</td>
-                            <td>{{ user.date_of_birth }}</td>
+                            <td> Username: {{ user1.username }}</td>
+                        </tr>
+                        <tr>
+                            <td> Email: {{ user1.email }}</td>
+                        </tr>
+                        <tr>
+                            <td>Date of birth: {{ user1.date_of_birth }}</td>
+                        </tr>
+                        <tr>
                             <td>
                                 {% if user.status == 'A' %}
-                                    <a href="{% url 'delete_user_admin' user.id_user %}">Obriši</a>
-                                {% else %}
-                                    <a href="" style="color: gray;">Obriši</a>
+                                    <a href="{% url 'delete_user_admin' user1.id_user %}">Obriši</a>
                                 {% endif %}
                             </td>
                         </tr>
@@ -29,13 +33,13 @@
 
         </ul>
     </div>
-
+<!--
     {% if messages %}
         <div class="inputlabel">
             {% for message in messages %}
                 <p>{{ message }}</p>
             {% endfor %}
         </div>
-    {% endif %}
+    {% endif %} -->
 {% endblock %}
 

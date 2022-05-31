@@ -90,7 +90,7 @@ def login_req(request: HttpRequest): #gotovo
 @user_passes_test(is_admin, login_url='home', redirect_field_name=None)
 def admin_all_users(request: HttpRequest):
     return render(request, 'admin_all_users.html', {
-        'users': User.objects.filter(Q(type='U') | Q(type='M'))
+        'users': User.objects.filter(Q(type='U') | Q(type='M')).filter(status="A")
     })
 
 
@@ -412,7 +412,7 @@ def add_category_req(request: HttpRequest): #fali template
     forma: AddNewCategoryForm = AddNewCategoryForm(data=request.POST or None)
     if forma.is_valid():
         print('asdionwqeoinoinasd')
-        nova_kategorija = forma.cleaned_data.get('newCategoryName')
+        nova_kategorija = forma.cleaned_data.get('Naziv')
         kategorija: Category = Category()
         kategorija.name = nova_kategorija
         kategorija.save()
@@ -562,7 +562,7 @@ def add_joke(request: HttpRequest): #gotovo
         new_joke.id_user_created = request.user
         new_joke.status = "P"
         new_joke.save()
-        messages.info(request,"Uspesno ste dodali vic")
+        messages.info(request,"Uspesno ste poslali vic na proveru")
     
     return render(request, "add_joke.html")
 

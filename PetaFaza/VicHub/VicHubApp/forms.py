@@ -31,7 +31,7 @@ class CustomUserCreationForm(UserCreationForm):
 
 # vukasin007
 class AddNewCategoryForm(Form):
-    newCategoryName = forms.CharField(max_length=30)
+    Naziv = forms.CharField(max_length=30)
 
 
 # vukasin007

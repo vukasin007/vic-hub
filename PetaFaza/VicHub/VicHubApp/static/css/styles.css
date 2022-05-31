@@ -252,3 +252,23 @@ li.inputlabel2 a {
 #buttonAddCategory {
     font-size: 15px;
 }
+
+li.inputlabel3{
+    display: block;
+    margin: 1em;
+    text-align: left;
+    padding: 1em;
+}
+
+
+.inputlabel3{
+    font-size: 18px;
+    color: #fff;
+    font-weight: bold;
+    background: linear-gradient(45deg, #99f, #22d);
+    /*display: inline-block;*/
+    border-radius: 15px;
+    padding: 1.5em;
+    text-align: center;
+    width: 400px;
+}
