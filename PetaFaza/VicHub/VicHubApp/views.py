@@ -1,3 +1,4 @@
+import datetime
 import re
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -17,11 +18,13 @@ def is_guest(user):
 
 
 def is_moderator(user):
-    return user.groups.filter(name='moderator').exists() or user.groups.filter(name='admin').exists()
+    return user.type=="M" or user.type=="A"
+        #user.groups.filter(name='moderator').exists() or user.groups.filter(name='admin').exists()
 
 
 def is_admin(user):
-    return user.groups.filter(name='admin').exists()
+    return user.type=="A"
+        #user.groups.filter(name='admin').exists()
 
 
 def index(request: HttpRequest):
@@ -450,6 +453,7 @@ def grade_joke(request: HttpRequest, joke_id: int): #gotovo
     for ocena in ocene_usera:
         if ocena.id_joke.id_joke == joke_id:
             ocena.grade = grade
+            ocena.date = datetime.datetime.now()
             ocena.save()
             flag_already_graded = True
             break
@@ -458,6 +462,7 @@ def grade_joke(request: HttpRequest, joke_id: int): #gotovo
         ocena.id_joke = Joke.objects.get(pk=joke_id)
         ocena.id_user = curruser
         ocena.grade = grade
+        ocena.date = datetime.datetime.now()
         ocena.save()
     messages.info(request, 'Ocenili ste vic sa ocenom: ' + str(grade))
     try:
@@ -476,46 +481,55 @@ def change_personal_data(request: HttpRequest): #fali template
     usernameForm = ChangeUsernameForm(data=request.POST or None)
     if usernameForm.is_valid():
         newUsername = usernameForm.cleaned_data.get('newUsername')
-        if re.search("^[A-Za-z\d]{3,20}$", newUsername):
+        useri = User.objects.filter(username=newUsername)
+        if useri.count() > 0 :
+            messages.error(request,"Ovaj username već postoji")
+
+        elif re.search("^[A-Za-z\d]{3,20}$", newUsername):
             curruser.username = newUsername
-            messages.info("promenjen username")
+            curruser.save()
+            messages.info(request, "Promenjen username")
         else:
-            messages.error("los format")
+            messages.error(request,"los format")
     firstnameForm = ChangeFirstNameForm(data=request.POST or None)
     if firstnameForm.is_valid():
         newFirstName = firstnameForm.cleaned_data.get('newFirstName')
         if re.search("^[A-Za-z]{2,20}$", newFirstName):
             curruser.first_name = newFirstName
-            messages.info("promenjen first name")
+            curruser.save()
+            messages.info(request,"promenjen first name")
         else:
-            messages.error("los format")
+            messages.error(request,"Los format")
     lastnameForm = ChangeLastNameForm(data=request.POST or None)
     if lastnameForm.is_valid():
         newLastName = lastnameForm.cleaned_data.get('newLastName')
         if re.search("^[A-Za-z]{2,20}$", newLastName):
             curruser.last_name = newLastName
-            messages.info("promenjen last name")
+            curruser.save()
+            messages.info(request,"Promenjen last name")
         else:
-            messages.error("los format")
+            messages.error(request,"Los format")
     mailForm = ChangeMailForm(data=request.POST or None)
     if mailForm.is_valid():
         newMail = mailForm.cleaned_data.get('newMail')
         if re.search("^[A-Za-z\d]{2,20}@[A-Za-z\d]{2,20}\.[A-Za-z\d]{2,3}$", newMail):
             curruser.email = newMail
-            messages.info("promenjen email")
+            curruser.save()
+            messages.info(request,"Promenjen email")
         else:
-            messages.error("los format")
+            messages.error(request,"Los format")
     passwordForm = ChangePasswordForm(data=request.POST or None)
     if passwordForm.is_valid():
         firstPass = passwordForm.cleaned_data.get('newPassword')
         secondPass = passwordForm.cleaned_data.get('confirm')
         if firstPass != secondPass:
-            messages.error("ne poklapa se potvrda.")
-        elif re.search("^.{8}$", firstPass):    # za sada bez detaljnih provera
+            messages.error(request,"Ne poklapa se potvrda.")
+        elif re.search("^.{8,}$", firstPass):    # za sada bez detaljnih provera
             curruser.set_password(firstPass)
-            messages.info("promenjen password")
+            curruser.save()
+            messages.info(request,"Promenjen password, bićete izlogovani")
         else:
-            messages.error("los format")
+            messages.error(request,"Nedovoljno jaka sifra")
     context = {
         'usernameForm': usernameForm,
         'firstNameForm': firstnameForm,
@@ -523,7 +537,7 @@ def change_personal_data(request: HttpRequest): #fali template
         'mailForm': mailForm,
         'passwordForm': passwordForm
     }
-    return render(request, 'stranica za promenu licnih podataka', context)
+    return render(request, 'change_data.html', context)
 
 
 def category_req(request: HttpRequest, category_id):  # comile #gotovo

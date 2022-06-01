@@ -56,5 +56,5 @@ class ChangeMailForm(Form):
 
 # vukasin007
 class ChangePasswordForm(Form):
-    newPassword = forms.PasswordInput()
-    confirm = forms.PasswordInput()
+    newPassword = forms.CharField(max_length=40)
+    confirm = forms.CharField(max_length=40)

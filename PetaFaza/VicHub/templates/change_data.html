@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Izmeni podatke
+{% endblock %}
+
+{% block content %}
+
+        <form method="post">
+            {% csrf_token %}
+            Novi username:{{ usernameForm.newUsername }} <input type="submit" value="Izmeni"> <br>
+        </form>
+        <form method="post">
+            {% csrf_token %}
+            Novo ime:{{ firstNameForm.newFirstName }}  <input type="submit" value="Izmeni"> <br>
+        </form>
+        <form method="post">
+            {% csrf_token %}
+            Novo prezime:{{ lastNameForm.newLastName }}  <input type="submit" value="Izmeni"> <br>
+        </form>
+        <form method="post">
+            {% csrf_token %}
+            Novi mail:{{ mailForm.newMail }} <input type="submit" value="Izmeni"> <br>
+        </form>
+        <form method="post">
+        {% csrf_token %}
+            Nova šifra:{{ passwordForm.newPassword }} <br>
+            Potvrdi šifru:{{ passwordForm.confirm }} <input type="submit" value="Izmeni"> <br>
+            <input type="submit" value="Izmeni">
+        </form>
+
+{% endblock %}
