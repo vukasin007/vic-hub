@@ -74,6 +74,7 @@ class Grade(models.Model):
     id_user = models.ForeignKey('User', models.DO_NOTHING, db_column='id_user')
     grade = models.IntegerField()   # 1 - 5
     date = models.DateTimeField(default=datetime.datetime.now())
+    was_reviewed = models.CharField(max_length=1, default='N')   # Y, N
 
     class Meta:
         managed = True

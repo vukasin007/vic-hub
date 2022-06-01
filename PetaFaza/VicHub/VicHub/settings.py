@@ -134,9 +134,7 @@ AUTH_USER_MODEL = 'VicHubApp.User'
 # bilten mailing properties @vukasin007
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'  # gmail
-# outlook- smtp-mail.outlook.com
-# yahoo- smtp.mail.yahoo.com
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = ""
 EMAIL_HOST_PASSWORD = ""
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
