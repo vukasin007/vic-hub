@@ -204,7 +204,6 @@ def request_mod(request: HttpRequest):
         currrequest.save()
         messages.info(request, 'Uspesno formiran zahtev za moderatora!')
     except:
-        print('kurvaaa')
         messages.error(request, 'Neuspesan zahtev za moderatora.')
     return redirect('home')
 
