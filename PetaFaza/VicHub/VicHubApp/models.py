@@ -73,6 +73,7 @@ class Grade(models.Model):
     id_joke = models.ForeignKey('Joke', models.DO_NOTHING, db_column='id_joke')
     id_user = models.ForeignKey('User', models.DO_NOTHING, db_column='id_user')
     grade = models.IntegerField()   # 1 - 5
+    date = models.DateTimeField(default=datetime.datetime.now())
 
     class Meta:
         managed = True
@@ -86,7 +87,7 @@ class Joke(models.Model):
     id_user_created = models.ForeignKey('User', models.DO_NOTHING, db_column='id_user_created', related_name='created')
     id_user_reviewed = models.ForeignKey('User', models.DO_NOTHING, db_column='id_user_reviewed',
                                          related_name='reviewed', blank=True, null=True)
-    # P, A, R, D
+    # P, A, R, D    ->  Accepted and send via bilten gets status B
     status = models.CharField(max_length=1)
     date_posted = models.DateTimeField(blank=True, null=True)
 
