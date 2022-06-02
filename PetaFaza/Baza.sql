@@ -106,12 +106,13 @@ DROP TABLE IF EXISTS `belongs_to`;
 CREATE TABLE `belongs_to` (
   `id_joke` int NOT NULL,
   `id_category` int NOT NULL,
-  PRIMARY KEY (`id_joke`),
+  `id_belongs_to` int NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id_belongs_to`),
   UNIQUE KEY `belongs_to_id_joke_id_category_631e8c5f_uniq` (`id_joke`,`id_category`),
   KEY `belongs_to_id_category_8da15163_fk_category_id_category` (`id_category`),
   CONSTRAINT `belongs_to_id_category_8da15163_fk_category_id_category` FOREIGN KEY (`id_category`) REFERENCES `category` (`id_category`),
   CONSTRAINT `belongs_to_id_joke_c04c6992_fk_joke_id_joke` FOREIGN KEY (`id_joke`) REFERENCES `joke` (`id_joke`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -120,6 +121,7 @@ CREATE TABLE `belongs_to` (
 
 LOCK TABLES `belongs_to` WRITE;
 /*!40000 ALTER TABLE `belongs_to` DISABLE KEYS */;
+INSERT INTO `belongs_to` VALUES (1,1,1),(2,1,2),(3,1,3),(5,3,4),(7,3,5),(8,3,6),(9,3,7),(10,3,8),(11,3,9),(12,1,10),(12,3,11),(13,1,12),(13,3,13),(16,4,14),(17,4,15),(18,4,16),(19,3,17),(21,5,18),(21,6,19);
 /*!40000 ALTER TABLE `belongs_to` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -135,7 +137,7 @@ CREATE TABLE `category` (
   `name` varchar(45) NOT NULL,
   PRIMARY KEY (`id_category`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -144,6 +146,7 @@ CREATE TABLE `category` (
 
 LOCK TABLES `category` WRITE;
 /*!40000 ALTER TABLE `category` DISABLE KEYS */;
+INSERT INTO `category` VALUES (5,'Boom'),(1,'Mujo i Haso'),(4,'Piroćanci'),(6,'Proba Kategorije'),(3,'Životinje');
 /*!40000 ALTER TABLE `category` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -167,7 +170,7 @@ CREATE TABLE `comment` (
   KEY `comment_id_user_8f8b46ac_fk_user_id_user` (`id_user`),
   CONSTRAINT `comment_id_joke_d14c08b5_fk_joke_id_joke` FOREIGN KEY (`id_joke`) REFERENCES `joke` (`id_joke`),
   CONSTRAINT `comment_id_user_8f8b46ac_fk_user_id_user` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -176,6 +179,7 @@ CREATE TABLE `comment` (
 
 LOCK TABLES `comment` WRITE;
 /*!40000 ALTER TABLE `comment` DISABLE KEYS */;
+INSERT INTO `comment` VALUES (1,1,'Bukvalno najbolji vic ikada!!!!!!!!!!\r\nHAHAHHAHAHHAHAHA','A','2022-05-21 12:30:10.000000',1,1),(2,2,'Ovo je mnogo dobar vic, znaci sve pršti','D',NULL,1,1),(3,1,'edededed','D',NULL,7,1),(4,2,'frrfrf','D',NULL,7,1),(5,3,'frfrfrf','D','2022-05-29 13:41:43.463536',1,1),(6,4,'frfrfrfrfrftt45','D','2022-05-29 13:45:09.044947',1,1),(7,5,'Komentar novi je ovo\r\naleeeee','A','2022-05-29 13:47:38.449736',1,1),(8,6,'Nemanja komentar','A','2022-05-29 13:48:32.074699',1,3),(9,1,'Bogami, zajeban piroćanac, hehe!!!','A','2022-05-30 17:17:18.013239',16,1),(10,7,'alooo mala','A','2022-05-30 23:48:24.441127',1,1),(11,8,'proba','D','2022-05-31 11:41:00.164403',1,1),(12,1,'gtgtgtgtgttg','A','2022-06-01 19:49:14.452621',21,3);
 /*!40000 ALTER TABLE `comment` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -201,7 +205,7 @@ CREATE TABLE `django_admin_log` (
   CONSTRAINT `django_admin_log_content_type_id_c4bce8eb_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`),
   CONSTRAINT `django_admin_log_user_id_c564eba6_fk_user_id_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id_user`),
   CONSTRAINT `django_admin_log_chk_1` CHECK ((`action_flag` >= 0))
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -210,7 +214,7 @@ CREATE TABLE `django_admin_log` (
 
 LOCK TABLES `django_admin_log` WRITE;
 /*!40000 ALTER TABLE `django_admin_log` DISABLE KEYS */;
-INSERT INTO `django_admin_log` VALUES (1,'2022-05-20 18:18:55.105804','1','basic',1,'[{\"added\": {}}]',3,1),(2,'2022-05-20 18:19:03.820406','2','moderator',1,'[{\"added\": {}}]',3,1),(3,'2022-05-20 18:19:09.472918','3','admin',1,'[{\"added\": {}}]',3,1),(4,'2022-05-20 18:25:17.497954','1','admin',2,'[{\"changed\": {\"fields\": [\"Groups\", \"Subscribed\", \"Status\", \"Type\"]}}]',7,1);
+INSERT INTO `django_admin_log` VALUES (1,'2022-05-20 18:18:55.105804','1','basic',1,'[{\"added\": {}}]',3,1),(2,'2022-05-20 18:19:03.820406','2','moderator',1,'[{\"added\": {}}]',3,1),(3,'2022-05-20 18:19:09.472918','3','admin',1,'[{\"added\": {}}]',3,1),(4,'2022-05-20 18:25:17.497954','1','admin',2,'[{\"changed\": {\"fields\": [\"Groups\", \"Subscribed\", \"Status\", \"Type\"]}}]',7,1),(5,'2022-05-21 11:27:08.886306','1','Category object (1)',1,'[{\"added\": {}}]',6,1),(6,'2022-05-21 11:28:36.142110','2','Category object (2)',1,'[{\"added\": {}}]',6,1),(7,'2022-05-21 11:29:25.419628','1','Category object (1)',2,'[{\"changed\": {\"fields\": [\"Name\"]}}]',6,1),(8,'2022-05-21 11:35:09.654732','2','Category object (2)',3,'',6,1),(9,'2022-05-21 11:35:30.967354','3','Category object (3)',1,'[{\"added\": {}}]',6,1),(10,'2022-05-21 11:44:31.238377','1','Category object (1)',2,'[{\"changed\": {\"fields\": [\"Name\"]}}]',6,1),(11,'2022-05-21 11:44:38.922948','3','Category object (3)',2,'[{\"changed\": {\"fields\": [\"Name\"]}}]',6,1),(12,'2022-05-21 12:30:16.950460','1','Joke object (1)',1,'[{\"added\": {}}]',9,1),(13,'2022-05-21 12:30:44.109955','1','BelongsTo object (1)',1,'[{\"added\": {}}]',12,1),(14,'2022-05-21 12:33:34.378487','1','Joke object (1)',2,'[{\"changed\": {\"fields\": [\"Content\"]}}]',9,1),(15,'2022-05-21 12:34:01.991110','1','Joke object (1)',2,'[{\"changed\": {\"fields\": [\"Content\"]}}]',9,1),(16,'2022-05-21 12:34:30.105665','1','Joke object (1)',2,'[{\"changed\": {\"fields\": [\"Content\"]}}]',9,1),(17,'2022-05-21 12:34:56.557530','1','Joke object (1)',2,'[{\"changed\": {\"fields\": [\"Content\"]}}]',9,1),(18,'2022-05-21 12:37:54.057562','1','Joke object (1)',2,'[{\"changed\": {\"fields\": [\"Content\"]}}]',9,1),(19,'2022-05-21 12:38:43.119658','1','Joke object (1)',2,'[{\"changed\": {\"fields\": [\"Content\"]}}]',9,1),(20,'2022-05-21 13:03:24.165120','2','Joke object (2)',1,'[{\"added\": {}}]',9,1),(21,'2022-05-21 13:03:41.324456','2','BelongsTo object (2)',1,'[{\"added\": {}}]',12,1),(22,'2022-05-21 13:14:24.446576','1','Comment object (1)',1,'[{\"added\": {}}]',11,1),(23,'2022-05-21 13:19:06.021692','1','Joke object (1)',2,'[{\"changed\": {\"fields\": [\"Content\"]}}]',9,1),(24,'2022-05-21 13:25:25.750475','1','Joke object (1)',2,'[{\"changed\": {\"fields\": [\"Content\"]}}]',9,1),(25,'2022-05-21 13:27:34.364931','1','Joke object (1)',2,'[{\"changed\": {\"fields\": [\"Content\"]}}]',9,1),(26,'2022-05-21 13:27:59.773054','2','Joke object (2)',2,'[{\"changed\": {\"fields\": [\"Content\"]}}]',9,1),(27,'2022-05-21 13:47:25.329459','1','Comment object (1)',2,'[{\"changed\": {\"fields\": [\"Content\"]}}]',11,1);
 /*!40000 ALTER TABLE `django_admin_log` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -253,7 +257,7 @@ CREATE TABLE `django_migrations` (
   `name` varchar(255) NOT NULL,
   `applied` datetime(6) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -262,7 +266,7 @@ CREATE TABLE `django_migrations` (
 
 LOCK TABLES `django_migrations` WRITE;
 /*!40000 ALTER TABLE `django_migrations` DISABLE KEYS */;
-INSERT INTO `django_migrations` VALUES (1,'contenttypes','0001_initial','2022-05-20 18:02:57.625994'),(2,'contenttypes','0002_remove_content_type_name','2022-05-20 18:02:58.142878'),(3,'auth','0001_initial','2022-05-20 18:02:59.072419'),(4,'auth','0002_alter_permission_name_max_length','2022-05-20 18:02:59.368622'),(5,'auth','0003_alter_user_email_max_length','2022-05-20 18:02:59.387113'),(6,'auth','0004_alter_user_username_opts','2022-05-20 18:02:59.407595'),(7,'auth','0005_alter_user_last_login_null','2022-05-20 18:02:59.426599'),(8,'auth','0006_require_contenttypes_0002','2022-05-20 18:02:59.437512'),(9,'auth','0007_alter_validators_add_error_messages','2022-05-20 18:02:59.455528'),(10,'auth','0008_alter_user_username_max_length','2022-05-20 18:02:59.475551'),(11,'auth','0009_alter_user_last_name_max_length','2022-05-20 18:02:59.495112'),(12,'auth','0010_alter_group_name_max_length','2022-05-20 18:02:59.537670'),(13,'auth','0011_update_proxy_permissions','2022-05-20 18:02:59.556680'),(14,'auth','0012_alter_user_first_name_max_length','2022-05-20 18:02:59.575631'),(15,'VicHubApp','0001_initial','2022-05-20 18:03:03.814793'),(16,'admin','0001_initial','2022-05-20 18:03:04.497654'),(17,'admin','0002_logentry_remove_auto_add','2022-05-20 18:03:04.561918'),(18,'admin','0003_logentry_add_action_flag_choices','2022-05-20 18:03:04.617647'),(19,'sessions','0001_initial','2022-05-20 18:03:04.724402'),(20,'VicHubApp','0002_alter_user_date_of_birth_and_more','2022-05-20 18:12:50.174584'),(21,'VicHubApp','0003_alter_user_date_of_birth_and_more','2022-05-20 18:27:41.962588'),(22,'VicHubApp','0004_alter_user_date_of_birth_and_more','2022-05-20 18:27:58.877208');
+INSERT INTO `django_migrations` VALUES (1,'contenttypes','0001_initial','2022-05-20 18:02:57.625994'),(2,'contenttypes','0002_remove_content_type_name','2022-05-20 18:02:58.142878'),(3,'auth','0001_initial','2022-05-20 18:02:59.072419'),(4,'auth','0002_alter_permission_name_max_length','2022-05-20 18:02:59.368622'),(5,'auth','0003_alter_user_email_max_length','2022-05-20 18:02:59.387113'),(6,'auth','0004_alter_user_username_opts','2022-05-20 18:02:59.407595'),(7,'auth','0005_alter_user_last_login_null','2022-05-20 18:02:59.426599'),(8,'auth','0006_require_contenttypes_0002','2022-05-20 18:02:59.437512'),(9,'auth','0007_alter_validators_add_error_messages','2022-05-20 18:02:59.455528'),(10,'auth','0008_alter_user_username_max_length','2022-05-20 18:02:59.475551'),(11,'auth','0009_alter_user_last_name_max_length','2022-05-20 18:02:59.495112'),(12,'auth','0010_alter_group_name_max_length','2022-05-20 18:02:59.537670'),(13,'auth','0011_update_proxy_permissions','2022-05-20 18:02:59.556680'),(14,'auth','0012_alter_user_first_name_max_length','2022-05-20 18:02:59.575631'),(15,'VicHubApp','0001_initial','2022-05-20 18:03:03.814793'),(16,'admin','0001_initial','2022-05-20 18:03:04.497654'),(17,'admin','0002_logentry_remove_auto_add','2022-05-20 18:03:04.561918'),(18,'admin','0003_logentry_add_action_flag_choices','2022-05-20 18:03:04.617647'),(19,'sessions','0001_initial','2022-05-20 18:03:04.724402'),(20,'VicHubApp','0002_alter_user_date_of_birth_and_more','2022-05-20 18:12:50.174584'),(21,'VicHubApp','0003_alter_user_date_of_birth_and_more','2022-05-20 18:27:41.962588'),(22,'VicHubApp','0004_alter_user_date_of_birth_and_more','2022-05-20 18:27:58.877208'),(23,'VicHubApp','0005_alter_user_date_of_birth_and_more','2022-05-29 12:43:37.648036'),(24,'VicHubApp','0006_alter_belongsto_options_alter_user_date_of_birth_and_more','2022-05-29 12:48:04.633539'),(25,'VicHubApp','0002_alter_grade_date_alter_user_date_of_birth_and_more','2022-06-01 15:23:58.807781'),(26,'VicHubApp','0003_alter_grade_date_alter_user_date_of_birth_and_more','2022-06-01 15:25:07.432387');
 /*!40000 ALTER TABLE `django_migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -288,7 +292,7 @@ CREATE TABLE `django_session` (
 
 LOCK TABLES `django_session` WRITE;
 /*!40000 ALTER TABLE `django_session` DISABLE KEYS */;
-INSERT INTO `django_session` VALUES ('heew36o0jdcjm984ubjqmdl9irylr0pf','.eJxVjEEOwiAQRe_C2pBSphRcuu8ZyAwzStVAUtqV8e7apAvd_vfef6mI25rj1mSJM6uzMur0uxGmh5Qd8B3LrepUy7rMpHdFH7TpqbI8L4f7d5Cx5W-dht4LJO_ZjOLBJmfAGgIKg1AIlh30ZNkCE4rxjHhNRCSdsY5G36n3B-S1OFk:1ns78F:pOBh_CQApRtFnnBe_LW9cS1TsHrodVVdDo0Fb5zPQ1g','2022-06-03 18:13:47.527825');
+INSERT INTO `django_session` VALUES ('6r8on6asf2kpa31iqofu4uue5klo05qc','.eJxVjEEOwiAQRe_C2pBSphRcuu8ZyAwzStVAUtqV8e7apAvd_vfef6mI25rj1mSJM6uzMur0uxGmh5Qd8B3LrepUy7rMpHdFH7TpqbI8L4f7d5Cx5W-dht4LJO_ZjOLBJmfAGgIKg1AIlh30ZNkCE4rxjHhNRCSdsY5G36n3B-S1OFk:1nwSUb:b2pfcPmxAsXLD49SqrHx7S5Uh5HR1TFNZExDeDmBzYU','2022-06-15 17:50:49.918580'),('8082wj14m1g322tv7y9jicx1bkvpvw4q','.eJxVjEEOwiAQRe_C2pBSphRcuu8ZyAwzStVAUtqV8e7apAvd_vfef6mI25rj1mSJM6uzMur0uxGmh5Qd8B3LrepUy7rMpHdFH7TpqbI8L4f7d5Cx5W-dht4LJO_ZjOLBJmfAGgIKg1AIlh30ZNkCE4rxjHhNRCSdsY5G36n3B-S1OFk:1nvIdV:y7fvs7YmJGuKqUnTsxLnt8JG4qSmzC9jU2dAwwH0o2A','2022-06-12 13:07:13.829218'),('dom8l2qho3ucrp63fqn96ntg6haf1n59','e30:1nsU4n:c-BsgVciUww-JpnrDUtnCsWYZbsR4VZ8iLExnLUAQAc','2022-06-04 18:43:45.174311');
 /*!40000 ALTER TABLE `django_session` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -304,12 +308,14 @@ CREATE TABLE `grade` (
   `grade` int NOT NULL,
   `id_joke` int NOT NULL,
   `id_user` int NOT NULL,
+  `was_reviewed` varchar(1) DEFAULT NULL,
+  `date` datetime(6) DEFAULT NULL,
   PRIMARY KEY (`id_grade`),
   KEY `grade_id_joke_a47357b7_fk_joke_id_joke` (`id_joke`),
   KEY `grade_id_user_74ee880f_fk_user_id_user` (`id_user`),
   CONSTRAINT `grade_id_joke_a47357b7_fk_joke_id_joke` FOREIGN KEY (`id_joke`) REFERENCES `joke` (`id_joke`),
   CONSTRAINT `grade_id_user_74ee880f_fk_user_id_user` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -318,6 +324,7 @@ CREATE TABLE `grade` (
 
 LOCK TABLES `grade` WRITE;
 /*!40000 ALTER TABLE `grade` DISABLE KEYS */;
+INSERT INTO `grade` VALUES (4,5,1,1,NULL,NULL),(5,1,13,6,NULL,NULL),(6,5,1,6,NULL,NULL),(7,5,16,3,'N','2022-06-01 17:31:56.843666');
 /*!40000 ALTER TABLE `grade` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -341,7 +348,7 @@ CREATE TABLE `joke` (
   KEY `joke_id_user_reviewed_4395f2f4_fk_user_id_user` (`id_user_reviewed`),
   CONSTRAINT `joke_id_user_created_08e669c6_fk_user_id_user` FOREIGN KEY (`id_user_created`) REFERENCES `user` (`id_user`),
   CONSTRAINT `joke_id_user_reviewed_4395f2f4_fk_user_id_user` FOREIGN KEY (`id_user_reviewed`) REFERENCES `user` (`id_user`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -350,6 +357,7 @@ CREATE TABLE `joke` (
 
 LOCK TABLES `joke` WRITE;
 /*!40000 ALTER TABLE `joke` DISABLE KEYS */;
+INSERT INTO `joke` VALUES (1,'Kila u vojsci','Zašto su Mujo i Haso dobili kilu u vojsci ? \r\n-Starešina im je rekao da dignu tenk u vazduh.','A','2022-05-21 12:30:10.000000',1,1),(2,'Černobil','Oženio se Mujo, a žena mu iz Černobila. \r\nHaso kada je saznao pita ga:\r\n   - Što se bolan oženi sa njom od tolko žena?\r\nA Mujo će:\r\n   - Ma ona prosto zrači!','D','2022-05-21 12:30:10.000000',1,1),(3,'Novi vic','Ovaj vic sam napravio ja.\r\nHehehehehheeheh!!','D','2022-05-22 22:16:32.136767',1,1),(4,'Novi vic','Ovaj vic sam napravio ja.\r\nHehehehehheeheh!!','R','2022-05-22 22:16:34.865097',1,1),(5,'Dobar vic bas','Kako se zove vepar sa 3 noge?\r\n-Nepar','A','2022-05-22 22:22:34.105769',1,1),(6,'Vic broj ko zna','Hehehehheh.\r\nBas dobar vic.\r\nZar ne?','R','2022-05-29 12:05:47.101098',1,1),(7,'fffff','rfrfrffrf','D','2022-05-29 13:08:45.392146',1,1),(8,'vic3','extremeeeeeeeeeeee','A','2022-05-29 14:31:54.496144',1,1),(9,'ttt','ggg','A','2022-05-29 14:33:01.553480',1,1),(10,'jj','jj','A','2022-05-29 14:35:22.361661',1,1),(11,'ii','iii','A','2022-05-29 14:44:17.119268',1,1),(12,'rfrf','rffrrf','A','2022-05-29 14:48:26.286728',1,1),(13,'parni','Mujo Haso i Zivotinje','A','2022-05-29 14:49:13.727412',1,1),(14,'ff','ff','A','2022-05-29 14:52:32.554180',1,1),(15,'ff','ff','R','2022-05-31 11:41:34.999392',1,1),(16,'Ženidba','Piroćanac se obraća svojoj ženi posle svadbe:\r\n- Baš računam koliko je koštala svadba i koliki je tvoj miraz.\r\n- I? - pita ga žena.\r\n- Izgleda da sam se oženio tobom iz ljubavi - kaže Piroćanac','A','2022-05-30 17:16:11.866346',1,1),(17,'Piroćanac i kum','Piroćanac zvao kuma na ručak i iznese samo pred njega jedan tanjir a u tanjiru jedno jaje.\r\nSeo kum, šta će, i počeo da jede. Piroćanac i deca ga gledaju a najmlađe dete počne da plače:\r\n- Tata, i ja hoću da jedem jaje!\r\n- Pa što odma plačeš, pa nije kum ala pa da ti ništa ne ostavi.','A','2022-05-30 17:16:17.417043',1,1),(18,'Piroćanac na moru','Otišao Piroćanac na more da prodaje sladoled. Ode on pravo na nudističku plažu. Prilazi mu prelepa gola plavuša:\r\n- Molim Vas jedan sladoled?\r\nPiroćanac gleda u nju spreda, gleda je otpozadi. Plavuši neugodno:\r\n- Kako Vas nije sramota, kao da nikada niste videli golu ženu!\r\nMa video sam ja golu ženu, nego gledam odakle ćeš pare da izvadiš?','A','2022-05-30 17:16:23.545280',1,1),(19,'Jaooooj','alooou','A','2022-05-31 11:41:32.684145',1,1),(20,'Vic poruka','Mnogo smesno hahahhahaha','R','2022-05-31 11:52:33.252339',6,1),(21,'hzhzh','hzhzhzhz','A','2022-06-01 19:49:03.567679',3,3);
 /*!40000 ALTER TABLE `joke` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -370,7 +378,7 @@ CREATE TABLE `request` (
   KEY `request_id_user_reviewed_8b8729ee_fk_user_id_user` (`id_user_reviewed`),
   CONSTRAINT `request_id_user_28b90120_fk_user_id_user` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`),
   CONSTRAINT `request_id_user_reviewed_8b8729ee_fk_user_id_user` FOREIGN KEY (`id_user_reviewed`) REFERENCES `user` (`id_user`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -379,6 +387,7 @@ CREATE TABLE `request` (
 
 LOCK TABLES `request` WRITE;
 /*!40000 ALTER TABLE `request` DISABLE KEYS */;
+INSERT INTO `request` VALUES (1,'A',3,1),(2,'R',3,1),(3,'A',3,1),(4,'R',4,1),(5,'A',5,1),(6,'R',6,1);
 /*!40000 ALTER TABLE `request` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -408,7 +417,7 @@ CREATE TABLE `user` (
   `date_of_promotion` datetime(6) NOT NULL,
   PRIMARY KEY (`id_user`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -417,7 +426,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('pbkdf2_sha256$320000$39HOCsLur89grIJb7tiC3L$js09m3zojWdTamjUOaYzuGFqiGEL99FxR6c5eadTR0M=','2022-05-20 18:13:47.000000',1,'admin','','','',1,1,'2022-05-20 18:13:11.000000',1,'2022-05-20','N','A','A','2022-05-20 20:12:54.000000');
+INSERT INTO `user` VALUES ('pbkdf2_sha256$320000$39HOCsLur89grIJb7tiC3L$js09m3zojWdTamjUOaYzuGFqiGEL99FxR6c5eadTR0M=','2022-06-01 17:50:49.909415',1,'admin','','','',1,1,'2022-05-20 18:13:11.000000',1,'2022-05-20','N','A','A','2022-05-20 20:12:54.000000'),('pbkdf2_sha256$320000$f93XbkgUfuSl2RFF1QvYEM$HFpUoGHYOxFDHtz7D315saBM9aE9vpInvxv/gPY/JOw=','2022-05-21 18:26:55.365119',0,'mihailoo','Mihailo','Tomašević','micomilan29@gmail.com',0,1,'2022-05-21 18:24:27.068447',2,'2022-05-21','N','A','U','2022-05-21 20:19:59.980442'),('pbkdf2_sha256$320000$39Xx6jqAoPnVgg2pOjJA3j$cL0ER0sB5DqBaWwVK2D3YjQClE6c2xPrJcbW+nhVj/Y=','2022-06-01 17:48:37.879729',0,'adminmosa','som','somic','eeee@gmail.com',0,1,'2022-05-29 10:19:59.535104',3,'2022-05-29','N','A','M','2022-05-29 11:31:02.989100'),('pbkdf2_sha256$320000$QKb4lEgDdsA7Z9fmEDnvVq$APIc2ZQxYjjE/en3Q4ZKWeQKowJtDE3nkBKRlYQd2+A=','2022-05-30 21:12:19.431643',0,'somce','Mihailo','Tomašević','aaaaaaaaaa@eee.com',0,1,'2022-05-30 21:12:19.071136',4,'2022-05-30','N','B','U','2022-05-30 23:09:14.673583'),('pbkdf2_sha256$320000$sTXJ7YcY5KYbkSvHdtUjj5$MDtQ+tNKmhgtNirFp7JOkilt9v9ESsOY8WgBfGxexII=','2022-05-30 21:32:09.049921',0,'malimrav','zzz','zzzz','eeee@jjj.com',0,1,'2022-05-30 21:32:08.443847',5,'2022-05-30','N','B','M','2022-05-30 23:30:42.261048'),('pbkdf2_sha256$320000$2WkfahMh5W0qFi5g3mUmnf$KKWBrThXiG5DzYqRuGDXpX1pxKTYeS2jP7NDHMoTyVM=','2022-05-31 09:43:43.388336',0,'toma','Toma','Tomic','toma@gmail.com',0,1,'2022-05-31 09:43:26.422487',6,'2022-05-31','N','A','U','2022-05-31 11:08:22.292706');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -437,7 +446,7 @@ CREATE TABLE `user_groups` (
   KEY `user_groups_group_id_b76f8aba_fk_auth_group_id` (`group_id`),
   CONSTRAINT `user_groups_group_id_b76f8aba_fk_auth_group_id` FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`),
   CONSTRAINT `user_groups_user_id_abaea130_fk_user_id_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id_user`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -446,7 +455,7 @@ CREATE TABLE `user_groups` (
 
 LOCK TABLES `user_groups` WRITE;
 /*!40000 ALTER TABLE `user_groups` DISABLE KEYS */;
-INSERT INTO `user_groups` VALUES (1,1,3);
+INSERT INTO `user_groups` VALUES (1,1,3),(2,2,1),(3,3,1),(4,4,1),(5,5,1),(6,6,1);
 /*!40000 ALTER TABLE `user_groups` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -487,4 +496,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-05-20 20:30:59
+-- Dump completed on 2022-06-02 21:41:19
