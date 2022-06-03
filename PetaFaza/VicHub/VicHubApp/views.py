@@ -259,6 +259,9 @@ def remove_mod(request: HttpRequest, user_id: int): #fali template
             messages.error(request, 'Nemate privilegije.')
             return render(request, 'index.html')
         aimedmoderator: User = User.objects.get(pk=user_id)
+        if aimedmoderator.type != "M":
+            messages.error(request, 'Korisnik kojem oduzimate privilegije nije moderator.')
+            return render(request, 'index.html')
         aimedmoderator.type = "U"
         aimedmoderator.save()
         messages.info(request, 'Uspesno oduzimanje moderator privilegija!')
