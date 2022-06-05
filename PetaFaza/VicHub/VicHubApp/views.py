@@ -129,7 +129,7 @@ def delete_user_admin(req: HttpRequest, user_id: int):
 @login_required(login_url='login')
 @user_passes_test(is_moderator, login_url='home', redirect_field_name=None)
 def delete_joke(request: HttpRequest, joke_id: int): #gotovo
-    if request.method == request.GET:
+    if request.method == 'GET':
         messages.error(request, 'Method nije POST')
         return render(request, 'index.html')
     joke = Joke.objects.get(pk=joke_id)
@@ -192,6 +192,9 @@ def unsubscribe_from_bilten(request: HttpRequest):
 @login_required(login_url='login')
 def request_mod(request: HttpRequest):
     try:
+        if is_moderator(request.user):
+            messages.error(request, "Nemate pravo na ovu akciju")
+            return redirect('home')
         requests = Request.objects.filter(id_user=request.user)
         for request1 in requests:
             if request1.status == "P" or request1 == "A":
@@ -310,6 +313,9 @@ def pending_jokes(request: HttpRequest): #gotovo
 # vukasin007
 @login_required(login_url='login')
 def choose_category(request: HttpRequest, joke_id: int): #gotovo
+    if request.method == 'GET':
+        messages.error(request, 'Method nije POST')
+        return render(request, 'index.html')
     currjoke: Joke = Joke.objects.get(pk=joke_id)
     categories = Category.objects.all()
     autor = User.objects.get(pk=currjoke.id_user_created.id_user)
@@ -335,7 +341,7 @@ def accept_joke(request: HttpRequest, joke_id: int): #gotovo
         if logedmod.type != "A" and logedmod.type != "M":   # moze i preko group privilegija
             messages.error(request, 'Nemate privilegije.')
             return render(request, 'index.html')
-        if request.method == request.GET:
+        if request.method == 'GET':
             messages.error(request, 'Method nije POST')
             return render(request, 'index.html')
 
@@ -374,7 +380,7 @@ def reject_joke(request: HttpRequest, joke_id: int): #gotovo
         if logedmod.type != "A" and logedmod.type != "M":
             messages.error(request, 'Nemate privilegije.')
             return render(request, 'index.html')
-        if request.method == request.GET:
+        if request.method == 'GET':
             messages.error(request, 'Method nije POST')
             return render(request, 'index.html')
         currjoke: Joke = Joke.objects.get(pk=joke_id)
@@ -395,7 +401,7 @@ def delete_comment(request: HttpRequest, comment_id: int): #gotovo
     if logedmod.type != "A" and logedmod.type != "M":  # moze i preko group privilegija
         messages.error(request, 'Nemate privilegije.')
         return render(request, 'index.html')
-    if request.method == request.GET:
+    if request.method == 'GET':
         messages.error(request, 'Method nije POST')
         return render(request, 'index.html')
     currkom: Comment = Comment.objects.get(pk=comment_id)
@@ -434,7 +440,7 @@ def add_category_req(request: HttpRequest): #fali template
 # vukasin007
 @login_required(login_url='login')
 def grade_joke(request: HttpRequest, joke_id: int): #gotovo
-    if request.method == request.GET:
+    if request.method == 'GET':
         messages.error(request, 'Method nije POST')
         return render(request, 'index.html')
     curruser: User = User.objects.get(username=request.user.get_username())
@@ -458,6 +464,7 @@ def grade_joke(request: HttpRequest, joke_id: int): #gotovo
             ocena.date = datetime.datetime.now()
             ocena.save()
             flag_already_graded = True
+            messages.info(request, 'Promenili ste ocenu vica u ocenu ' + str(grade))
             break
     if not flag_already_graded:
         ocena: Grade = Grade()
@@ -466,7 +473,7 @@ def grade_joke(request: HttpRequest, joke_id: int): #gotovo
         ocena.grade = grade
         ocena.date = datetime.datetime.now()
         ocena.save()
-    messages.info(request, 'Ocenili ste vic sa ocenom: ' + str(grade))
+        messages.info(request, 'Ocenili ste vic sa ocenom: ' + str(grade))
     try:
         currjoke = Joke.objects.get(pk=joke_id)
         firstBelongsTo = BelongsTo.objects.filter(id_joke=currjoke).first()

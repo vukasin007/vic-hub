@@ -24,6 +24,9 @@
                             <td>
                                 {% if user.status == 'A' %}
                                     <a href="{% url 'delete_user_admin' user1.id_user %}">Obriši</a>
+                                    {% if user1.type == 'M' %}
+                                        <a href="{% url 'remove_mod' user1.id_user %}">Oduzmi moderatora</a>
+                                    {% endif %}
                                 {% endif %}
                             </td>
                         </tr>
