@@ -326,6 +326,7 @@ def choose_category(request: HttpRequest, joke_id: int): #gotovo
     }
     return render(request, "choose_category.html", context)
 
+
 @login_required(login_url='login')
 @user_passes_test(is_moderator, login_url='home', redirect_field_name=None)
 def add_category(request: HttpRequest):
@@ -422,14 +423,17 @@ def add_category_req(request: HttpRequest): #fali template
         return render(request, 'index.html')
     forma: AddNewCategoryForm = AddNewCategoryForm(data=request.POST or None)
     if forma.is_valid():
-        nova_kategorija = forma.cleaned_data.get('Naziv')
-        if (nova_kategorija.__len__() < 1):
-            messages.warning(request, "Niste uneli naziv kategorije")
-            return redirect("add_category")
-        kategorija: Category = Category()
-        kategorija.name = nova_kategorija
-        kategorija.save()
-        messages.info(request, 'Uspesno kreiranje nove kategorije!')
+        try:
+            nova_kategorija = forma.cleaned_data.get('Naziv')
+            if (nova_kategorija.__len__() < 1):
+                messages.warning(request, "Niste uneli naziv kategorije")
+                return redirect("add_category")
+            kategorija: Category = Category()
+            kategorija.name = nova_kategorija
+            kategorija.save()
+            messages.info(request, 'Uspesno kreiranje nove kategorije!')
+        except:
+            messages.info(request, 'Nespesno kreiranje nove kategorije.')
         return redirect('all_categories')
     context = {
         'addCategoryForm': forma,
