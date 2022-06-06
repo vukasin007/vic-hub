@@ -3249,7 +3249,7 @@
     "persistSession": false,
     "parallel": false,
     "timeout": 300,
-    "tests": []
+    "tests": ["8dd508a4-6378-48e0-9b3b-99c14a4a34d7", "6822ff72-9cd3-49f9-9d18-bdcdc91a62f0", "6ad091f1-1407-4f43-b4e1-2055e3668cf2", "9543893c-ab81-4a6e-9fde-e1cb2c20d553", "1d933f36-2ab9-4517-8cef-2d58a8ba578d"]
   }],
   "urls": ["http://127.0.0.1:8000/"],
   "plugins": []
