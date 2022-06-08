@@ -1,6 +1,8 @@
 from unittest import skip
 
 from django.test import TestCase, Client
+from django.urls import reverse
+
 from. models import *
 
 # Create your tests here.
@@ -21,7 +23,7 @@ def create_dummy_user(username:str, type_kor: str):
 
 
 class FormTests(TestCase):
-
+    """
     def test_username_changed_SSU18(self):
         c = Client()
         dummy = create_dummy_user("dummy8172387","U")
@@ -185,3 +187,173 @@ class FormTests(TestCase):
         })
         mail = User.objects.get(username="dummy8172387").email
         self.assertNotEquals(mail, 'jabuka')
+
+
+    def test_remove_mod_privileges_SSU19(self):
+        dummy=create_dummy_user("dummy8172387", "M")
+        admin=create_dummy_user("admin", "A")
+        id = dummy.id_user
+        self.client.force_login(user=admin)
+
+        url = reverse("remove_mod", args=(id,))
+        response = self.client.get(path=url)
+
+        self.assertEquals(response.status_code,200)
+
+        type = User.objects.get(username="dummy8172387").type
+        self.assertNotEquals(type, 'M')
+
+    def test_remove_mod_privileges_SSU19_fail_not_admin(self):
+        dummy = create_dummy_user("dummy8172387", "M")
+        not_admin = create_dummy_user("admin", "M")
+        id = dummy.id_user
+        self.client.force_login(user=not_admin)
+
+        url = reverse("remove_mod", args=(id,))
+        self.client.get(path=url)
+
+        type = User.objects.get(username="dummy8172387").type
+        self.assertEquals(type, 'M')
+
+    def test_moderator_approve_SSU17(self):
+        dummy = create_dummy_user("dummy8172387", "U")
+        admin = create_dummy_user("admin", "A")
+
+        self.client.force_login(user=dummy)
+
+        url = reverse("request_mod")
+        self.client.get(path=url)
+
+        request=Request.objects.get(id_user=dummy)
+        id = request.id_request
+
+        self.client.logout()
+
+        self.client.force_login(user=admin)
+        url = reverse("accept_mod_request", args=(id,))
+        r=self.client.get(path=url)
+        self.assertEquals(r.status_code,200)
+
+        type = User.objects.get(username="dummy8172387").type
+        self.assertEquals(type, 'M')
+
+    def test_moderator_reject_SSU17(self):
+        dummy = create_dummy_user("dummy8172387", "U")
+        admin = create_dummy_user("admin", "A")
+        id=dummy.id_user
+
+        self.client.force_login(user=dummy)
+        url = reverse("request_mod")
+        self.client.get(path=url)
+
+        self.client.logout()
+
+        self.client.force_login(user=admin)
+        url = reverse("reject_mod_request", args=(id,))
+        self.client.get(path=url)
+
+        type = User.objects.get(username="dummy8172387").type
+        self.assertEquals(type, 'U')
+
+    def test_SSU17_fail_not_admin(self):
+        dummy = create_dummy_user("dummy8172387", "U")
+        notadmin = create_dummy_user("admin", "U")
+        id=dummy.id_user
+
+        self.client.force_login(user=dummy)
+        url = reverse("request_mod")
+        self.client.get(path=url)
+
+        self.client.logout()
+
+        self.client.force_login(user=notadmin)
+        url = reverse("accept_mod_request", args=(id,))
+        self.client.get(path=url)
+
+        type = User.objects.get(username="dummy8172387").type
+        self.assertEquals(type, 'U')
+
+    def test_moderator_request_SSU14(self):
+        dummy = create_dummy_user("dummy8172387", "U")
+
+        before = Request.objects.all().count()
+
+        self.client.force_login(user=dummy)
+
+        url = reverse("request_mod")
+        r=self.client.get(path=url,follow=True)
+        self.assertContains(r,'Uspesno formiran zahtev za moderatora!' , html=True)
+
+        after = Request.objects.all().count()
+
+        self.assertEquals(before+1, after)
+
+    def test_moderator_request_SSU14_again_request(self):
+        dummy = create_dummy_user("dummy8172387", "U")
+        zero = Request.objects.all().count()
+
+        self.client.force_login(user=dummy)
+
+        url = reverse("request_mod")
+        self.client.get(path=url)
+
+        one = Request.objects.all().count()
+
+        url = reverse("request_mod")
+        r=self.client.get(path=url,follow=True)
+        self.assertContains(r, 'Vec ste poslali zahtev', html=True)
+
+        two = Request.objects.all().count()
+
+        self.assertTrue(zero+1==one)
+        self.assertEquals(one,two)
+
+    def test_moderator_request_SSU14_already_mod(self):
+        dummy = create_dummy_user("dummy8172387", "M")
+        zero = Request.objects.all().count()
+
+        self.client.force_login(user=dummy)
+
+        url = reverse("request_mod")
+        r=self.client.get(path=url,follow=True)
+        self.assertContains(r,"Nemate pravo na ovu akciju",html=True)
+
+        one = Request.objects.all().count()
+
+        self.assertEquals(one, zero)
+
+    def test_unsubscribe_from_bilten_SSU16(self):
+        dummy = create_dummy_user("dummy8172387", "M")
+        dummy.subscribed= "Y"
+
+        self.client.force_login(user=dummy)
+
+        url = reverse("unsubscribe_from_bilten")
+        r = self.client.get(path=url, follow=True)
+        self.assertContains(r, "Uspesna odjava sa biltena!", html=True)
+
+        self.assertEquals(User.objects.get(username="dummy8172387").subscribed, "N")
+
+    def test_subscribe_to_bilten_SSU13(self):
+        dummy = create_dummy_user("dummy8172387", "M")
+
+        self.client.force_login(user=dummy)
+
+        url = reverse("subscribe_to_bilten")
+        r=self.client.get(path=url, follow=True)
+        self.assertContains(r,"Uspesna prijava na bilten!", html=True)
+
+        self.assertEquals(User.objects.get(username="dummy8172387").subscribed, "Y")
+
+
+    def test_logout_SSU15(self):
+        dummy = create_dummy_user("dummy8172387", "M")
+
+        self.client.force_login(user=dummy)
+
+        url = reverse("logout")
+        r = self.client.get(path=url, follow=True)
+        self.assertContains(r,"Uspesna odjava!", html=True)
+    """
+
+    
