@@ -4,6 +4,7 @@ from django.test import TestCase, Client
 from django.urls import reverse
 
 from .models import *
+from django.contrib.auth.models import Group
 
 # Create your tests here.
 
@@ -411,3 +412,151 @@ class FormTests(TestCase):
         after = Category.objects.all().count()
 
         self.assertEquals(before, after)
+
+    def test_login_SSU1_successful_login(self):
+        c = Client()
+        dummy = create_dummy_user("dummy8172387", "U")
+        c.login(username="dummy8172387", password="kQ!:h9[T&B2,7*p{")
+        response = c.post('/login/')
+        self.assertRedirects(response, '/')
+
+    def test_login_SSU1_empty_username(self):
+        c = Client()
+        dummy = create_dummy_user("dummy8172387", "U")
+        c.login(username="", password="kQ!:h9[T&B2,7*p{")
+        response = c.post('/login/')
+        self.assertContains(response, 'Prijava nije uspela. Podaci su nevalidni.', html=True)
+
+    def test_login_SSU1_empty_password(self):
+        c = Client()
+        dummy = create_dummy_user("dummy8172387", "U")
+        c.login(username="dummy8172387", password="")
+        response = c.post('/login/')
+        self.assertContains(response, 'Prijava nije uspela. Podaci su nevalidni.', html=True)
+
+    def test_login_SSU1_username_does_not_exist(self):
+        c = Client()
+        dummy = create_dummy_user("dummy8172387", "U")
+        c.login(username="dummy8172387123", password="kQ!:h9[T&B2,7*p{")
+        response = c.post('/login/')
+        self.assertContains(response, 'Prijava nije uspela. Podaci su nevalidni.', html=True)
+
+    def test_login_SSU1_wrong_password(self):
+        c = Client()
+        dummy = create_dummy_user("dummy8172387", "U")
+        c.login(username="dummy8172387", password="kJ!:h9[T&B2,7*p{")
+        response = c.post('/login/')
+        self.assertContains(response, 'Prijava nije uspela. Podaci su nevalidni.', html=True)
+
+    def test_register_SSU2_successful_registration(self):
+        c = Client()
+        g = Group(name="basic")
+        g.save()
+        response = c.post('/register/', data={
+            'username': 'dummy8172387',
+            'password1': 'kQ!:h9[T&B2,7*p{',
+            'password2': 'kQ!:h9[T&B2,7*p{',
+            'first_name': 'Dummy',
+            'last_name': 'Test',
+            'email': 'dummyTest@dymmttesting.com',
+            'date_of_birth': '2000-10-10'
+        })
+        success = c.login(username='dummy8172387', password='kQ!:h9[T&B2,7*p{')
+        self.assertTrue(success)
+
+    def test_register_SSU2_empty_username(self):
+        c = Client()
+        g = Group(name="basic")
+        g.save()
+        response = c.post('/register/', data={
+            'username': '',
+            'password1': 'kQ!:h9[T&B2,7*p{',
+            'password2': 'kQ!:h9[T&B2,7*p{',
+            'first_name': 'Dummy',
+            'last_name': 'Test',
+            'email': 'dummyTest@dymmttesting.com',
+            'date_of_birth': '2000-10-10'
+        })
+        success = c.login(username='', password='kQ!:h9[T&B2,7*p{')
+        self.assertFalse(success)
+
+    def test_register_SSU2_empty_password(self):
+        c = Client()
+        g = Group(name="basic")
+        g.save()
+        response = c.post('/register/', data={
+            'username': 'dummy8172387',
+            'password1': '',
+            'password2': 'kQ!:h9[T&B2,7*p{',
+            'first_name': 'Dummy',
+            'last_name': 'Test',
+            'email': 'dummyTest@dymmttesting.com',
+            'date_of_birth': '2000-10-10'
+        })
+        success = c.login(username='dummy8172387', password='')
+        self.assertFalse(success)
+
+    def test_register_SSU2_wrong_confirm_password(self):
+        c = Client()
+        g = Group(name="basic")
+        g.save()
+        response = c.post('/register/', data={
+            'username': 'dummy8172387',
+            'password1': 'kQ!:h9[T&B2,7*p{',
+            'password2': 'kQ!:h9[P&B2,7*p{',
+            'first_name': 'Dummy',
+            'last_name': 'Test',
+            'email': 'dummyTest@dymmttesting.com',
+            'date_of_birth': '2000-10-10'
+        })
+        success = c.login(username='dummy8172387', password='kQ!:h9[T&B2,7*p{')
+        self.assertFalse(success)
+
+    def test_register_SSU2_username_exists(self):
+        c = Client()
+        g = Group(name="basic")
+        g.save()
+        dummy = create_dummy_user("dummy8172387","U")
+        response = c.post('/register/', data={
+            'username': 'dummy8172387',
+            'password1': 'kq!:h9[T&B2,7*p{',
+            'password2': 'kq!:h9[T&B2,7*p{',
+            'first_name': 'Dummy',
+            'last_name': 'Test',
+            'email': 'dummyTest@dymmttesting.com',
+            'date_of_birth': '2000-10-10'
+        })
+        success = c.login(username='dummy8172387', password='kq!:h9[T&B2,7*p{')
+        self.assertFalse(success)
+
+    def test_add_joke_SSU3_successful(self):
+        c = Client()
+        dummy = create_dummy_user("dummy8172387", "U")
+        c.login(username='dummy8172387', password='kQ!:h9[T&B2,7*p{')
+        response = c.post('/add_joke/', data={
+            "joke_content": "glup vic",
+            "joke_title": "naslov"
+        })
+        self.assertContains(response, 'Uspesno ste poslali vic na proveru', html=True)
+
+    def test_add_joke_SSU3_title_missing(self):
+        c = Client()
+        dummy = create_dummy_user("dummy8172387", "U")
+        c.login(username='dummy8172387', password='kQ!:h9[T&B2,7*p{')
+        response = c.post('/add_joke/', data={
+            "joke_content": "glup vic",
+            "joke_title": ""
+        })
+        response = c.get('/add_joke/', follow=True)
+        self.assertContains(response, 'Niste uneli naslov vica', html=True)
+
+    def test_add_joke_SSU3_content_missing(self):
+        c = Client()
+        dummy = create_dummy_user("dummy8172387", "U")
+        c.login(username='dummy8172387', password='kQ!:h9[T&B2,7*p{')
+        response = c.post('/add_joke/', data={
+            "joke_content": "",
+            "joke_title": "naslov"
+        })
+        response = c.get('/add_joke/', follow=True)
+        self.assertContains(response, 'Niste uneli sadrzaj vica', html=True)
