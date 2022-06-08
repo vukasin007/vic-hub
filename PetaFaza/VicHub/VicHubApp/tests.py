@@ -36,7 +36,7 @@ def create_dummy_joke():
 
 
 class FormTests(TestCase):
-    
+
     def test_username_changed_SSU18(self):
         c = Client()
         dummy = create_dummy_user("dummy8172387","U")
@@ -397,8 +397,6 @@ class FormTests(TestCase):
         after = Category.objects.all().count()
 
         self.assertEquals(before,after)
-
-    """
 
     def test_category_add_SSU11_basic_user(self):
         dummy = create_dummy_user("dummy8172387", "U")
