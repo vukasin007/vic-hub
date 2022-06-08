@@ -24,11 +24,13 @@ class FormTests(TestCase):
         c = Client()
         dummy = create_dummy_user("U")
         c.login(username='dummy8172387', password='kQ!:h9[T&B2,7*p{')
-        response = c.post("", data={
+        response = c.post("/change_personal_data/", data={
             'newUsername': 'newusername'
         })
         print(dummy.username)
         # ne detektuje promenu username-a
-        c.login(username='newusername', password='kQ!:h9[T&B2,7*p{')
-        self.assertEqual(dummy.username, "newusername")
-        self.assertContains(response, 'newusername')
+        success = c.login(username='newusername', password='kQ!:h9[T&B2,7*p{')
+        self.assertTrue(success)
+        #self.assertEqual(dummy.username, "newusername")
+        #self.assertContains(response, 'newusername')
+
