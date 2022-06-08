@@ -39,7 +39,7 @@ class BelongsTo(models.Model):
     id_belongs_to = models.AutoField(primary_key=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'belongs_to'
         unique_together = (('id_joke', 'id_category'),)
 

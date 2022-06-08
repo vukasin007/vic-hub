@@ -3,7 +3,7 @@ from unittest import skip
 from django.test import TestCase, Client
 from django.urls import reverse
 
-from. models import *
+from .models import *
 
 # Create your tests here.
 
@@ -21,9 +21,22 @@ def create_dummy_user(username:str, type_kor: str):
     korisnik.save()
     return korisnik
 
+def create_dummy_joke():
+    korisnik = Joke()
+    korisnik.content= "glup vic"
+    korisnik.title="naslov"
+    korisnik.status="A"
+
+    aa=create_dummy_user("kor","M")
+
+    korisnik.id_user_created = aa
+    korisnik.id_user_reviewed = aa
+    korisnik.save()
+    return korisnik
+
 
 class FormTests(TestCase):
-    """
+    
     def test_username_changed_SSU18(self):
         c = Client()
         dummy = create_dummy_user("dummy8172387","U")
@@ -354,6 +367,49 @@ class FormTests(TestCase):
         url = reverse("logout")
         r = self.client.get(path=url, follow=True)
         self.assertContains(r,"Uspesna odjava!", html=True)
+
+
+    def test_category_add_SSU11(self):
+        dummy = create_dummy_user("dummy8172387", "M")
+        self.client.force_login(user=dummy)
+        before = Category.objects.all().count()
+
+        url = reverse("add_category")
+        r = self.client.post(path=url, follow=True, data={
+            "Naziv": "Mujo i Fata"
+        })
+        self.assertContains(r,'Uspesno kreiranje nove kategorije!',html=True)
+
+        after = Category.objects.all().count()
+
+        self.assertEquals(before+1,after)
+
+    def test_category_add_SSU11_empty_title(self):
+        dummy = create_dummy_user("dummy8172387", "M")
+        self.client.force_login(user=dummy)
+        before = Category.objects.all().count()
+
+        url = reverse("add_category")
+        r = self.client.post(path=url, follow=True, data={
+            "Naziv": ""
+        })
+
+        after = Category.objects.all().count()
+
+        self.assertEquals(before,after)
+
     """
 
-    
+    def test_category_add_SSU11_basic_user(self):
+        dummy = create_dummy_user("dummy8172387", "U")
+        self.client.force_login(user=dummy)
+        before = Category.objects.all().count()
+
+        url = reverse("add_category")
+        r = self.client.post(path=url, follow=True, data={
+            "Naziv": "Kateg"
+        })
+
+        after = Category.objects.all().count()
+
+        self.assertEquals(before, after)
