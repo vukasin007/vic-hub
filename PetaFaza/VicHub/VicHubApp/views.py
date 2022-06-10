@@ -313,8 +313,11 @@ def pending_jokes(request: HttpRequest): #gotovo
 # vukasin007
 @login_required(login_url='login')
 def choose_category(request: HttpRequest, joke_id: int): #gotovo
-    if request.method == 'GET':
-        messages.error(request, 'Method nije POST')
+    #if request.method == 'GET':
+       # messages.error(request, 'Method nije POST')
+       # return render(request, 'index.html')
+    if is_moderator(request.user) == False:
+        messages.error(request, 'Nemate privilegije')
         return render(request, 'index.html')
     currjoke: Joke = Joke.objects.get(pk=joke_id)
     categories = Category.objects.all()
@@ -393,6 +396,7 @@ def reject_joke(request: HttpRequest, joke_id: int): #gotovo
     except:
         messages.error(request, 'Neuspesno odbijanje vica.')
     return redirect('pending_jokes')
+
 
 
 # vukasin007

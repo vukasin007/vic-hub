@@ -1,5 +1,6 @@
 from unittest import skip
 
+from django.contrib.auth.models import Group
 from django.test import TestCase, Client
 from django.urls import reverse
 
