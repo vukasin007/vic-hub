@@ -1,5 +1,6 @@
 from unittest import skip
 
+from django.contrib.auth.models import Group
 from django.test import TestCase, Client
 from django.urls import reverse
 
@@ -559,3 +560,184 @@ class FormTests(TestCase):
         })
         response = c.get('/add_joke/', follow=True)
         self.assertContains(response, 'Niste uneli sadrzaj vica', html=True)
+
+    def test_register_by_admin_SSU4_create_basic_user(self):
+        dummy_admin = create_dummy_user('admin', 'A')
+        self.client.login(username='admin', password='kQ!:h9[T&B2,7*p{')
+        Group(name='basic').save()
+        self.client.post('/register_admin/', data={
+            'username': 'dummy8172387',
+            'password1': 'kQ!:h9[T&B2,7*p{',
+            'password2': 'kQ!:h9[T&B2,7*p{',
+            'first_name': 'Dummy',
+            'last_name': 'Test',
+            'email': 'dummyTest@dymmttesting.com',
+            'date_of_birth': '2000-10-10',
+            'type': 'basic'
+        })
+        self.assertTrue(User.objects.get(username='dummy8172387').groups.filter(name='basic').exists())
+
+    def test_register_by_admin_SSU4_create_moderator(self):
+        dummy_admin = create_dummy_user('admin', 'A')
+        self.client.login(username='admin', password='kQ!:h9[T&B2,7*p{')
+        Group(name='moderator').save()
+        self.client.post('/register_admin/', data={
+            'username': 'dummy8172387',
+            'password1': 'kQ!:h9[T&B2,7*p{',
+            'password2': 'kQ!:h9[T&B2,7*p{',
+            'first_name': 'Dummy',
+            'last_name': 'Test',
+            'email': 'dummyTest@dymmttesting.com',
+            'date_of_birth': '2000-10-10',
+            'type': 'moderator'
+        })
+        self.assertTrue(User.objects.get(username='dummy8172387').groups.filter(name='moderator').exists())
+
+    def test_delete_user_admin_SSU5_successful(self):
+        dummy_user = create_dummy_user('dummy8172387', 'U')
+        dummy_admin = create_dummy_user('admin', 'A')
+        self.client.login(username='admin', password='kQ!:h9[T&B2,7*p{')
+        self.client.get(f'/delete_user_admin/{dummy_user.id_user}')
+        response = self.client.get('/admin_all_users/')
+        self.assertContains(response, f'Korisnik {dummy_user.username} je uspešno obrisan.', html=True)
+
+    def test_delete_joke_SSU6_successful(self):
+        dummy_joke = create_dummy_joke()
+        self.client.login(username='kor', password='kQ!:h9[T&B2,7*p{')
+
+        comment = Comment()
+        comment.id_joke = dummy_joke
+        comment.id_user = User.objects.get(username='kor')
+        comment.ordinal_number = 1
+        comment.status = 'A'
+        comment.save()
+
+        self.client.post(f'/delete_joke/{dummy_joke.id_joke}')
+        dummy_joke.refresh_from_db()
+        comment.refresh_from_db()
+        self.assertEquals(dummy_joke.status, 'D')
+        self.assertEquals(comment.status, 'D')
+
+    def test_delete_joke_SSU6_method_is_get(self):
+        dummy_joke = create_dummy_joke()
+        self.client.login(username='kor', password='kQ!:h9[T&B2,7*p{')
+        response = self.client.get(f'/delete_joke/{dummy_joke.id_joke}')
+        self.assertContains(response, 'Method nije POST', html=True)
+
+    def test_delete_comment_SSU7_successful(self):
+        dummy_joke = create_dummy_joke()
+        self.client.login(username='kor', password='kQ!:h9[T&B2,7*p{')
+
+        comment = Comment()
+        comment.id_joke = dummy_joke
+        comment.id_user = User.objects.get(username='kor')
+        comment.ordinal_number = 1
+        comment.status = 'A'
+        comment.save()
+
+        self.client.post(f'/delete_comment/{comment.id_comment}', data={
+            'id_joke': dummy_joke.id_joke
+        })
+        comment.refresh_from_db()
+        self.assertEquals(comment.status, 'D')
+
+    def test_delete_comment_SSU7_basic_user(self):
+        dummy_user = create_dummy_user('dummy8172387', 'U')
+        self.client.login(username='dummy8172387', password='kQ!:h9[T&B2,7*p{')
+        response = self.client.post(f'/delete_comment/{dummy_user.id_user}')
+        self.assertContains(response, 'Nemate privilegije.', html=True)
+
+    def test_delete_comment_SSU7_method_is_get(self):
+        dummy_joke = create_dummy_joke()
+        self.client.login(username='kor', password='kQ!:h9[T&B2,7*p{')
+        response = self.client.get('/delete_comment/1')
+        self.assertContains(response, 'Method nije POST', html=True)
+
+    def test_accept_joke_SSU8_successful(self):
+        dummy_joke = create_dummy_joke()
+        dummy_joke.status = 'P'
+        dummy_joke.save()
+
+        self.client.login(username='kor', password='kQ!:h9[T&B2,7*p{')
+        self.client.post(f'/accept_joke/{dummy_joke.id_joke}', data={
+            'kategorija': ['']
+        })
+
+        dummy_joke.refresh_from_db()
+        self.assertEquals(dummy_joke.status, 'A')
+
+    def test_accept_joke_SSU8_no_categories(self):
+        dummy_joke = create_dummy_joke()
+        self.client.login(username='kor', password='kQ!:h9[T&B2,7*p{')
+        self.client.post(f'/accept_joke/{dummy_joke.id_joke}', data={
+            'kategorija': []
+        })
+        response = self.client.get(f'/choose_category/{dummy_joke.id_joke}')
+        self.assertContains(response, 'Niste odabrali kategoriju', html=True)
+
+    def test_reject_joke_SSU8_successful(self):
+        dummy_joke = create_dummy_joke()
+        self.client.login(username='kor', password='kQ!:h9[T&B2,7*p{')
+        self.client.post(f'/reject_joke/{dummy_joke.id_joke}')
+        dummy_joke.refresh_from_db()
+        self.assertEquals(dummy_joke.status, 'R')
+
+    def test_grade_joke_SSU9_new_grade(self):
+        dummy_joke = create_dummy_joke()
+        dummy_user = create_dummy_user('dummy8172387', 'U')
+        self.client.login(username='dummy8172387', password='kQ!:h9[T&B2,7*p{')
+        self.client.post(f'/grade_joke/{dummy_joke.id_joke}', data={
+            'grade': '4'
+        })
+        new_grade = Grade.objects.filter(id_joke=dummy_joke).filter(id_user=dummy_user).first()
+        self.assertEquals(new_grade.grade, 4)
+
+    def test_grade_joke_SSU9_change_grade(self):
+        dummy_joke = create_dummy_joke()
+        dummy_user = create_dummy_user('dummy8172387', 'U')
+        self.client.login(username='dummy8172387', password='kQ!:h9[T&B2,7*p{')
+
+        self.client.post(f'/grade_joke/{dummy_joke.id_joke}', data={
+            'grade': '4'
+        })
+        new_grade = Grade.objects.filter(id_joke=dummy_joke).filter(id_user=dummy_user).first()
+        self.assertEquals(new_grade.grade, 4)
+
+        self.client.post(f'/grade_joke/{dummy_joke.id_joke}', data={
+            'grade': '5'
+        })
+        changed_grade = Grade.objects.filter(id_joke=dummy_joke).filter(id_user=dummy_user).first()
+        self.assertEquals(changed_grade.grade, 5)
+
+    def test_grade_joke_SSU9_user_posted_the_joke(self):
+        dummy_joke = create_dummy_joke()
+        self.client.login(username='kor', password='kQ!:h9[T&B2,7*p{')
+        self.client.post(f'/grade_joke/{dummy_joke.id_joke}', data={
+            'grade': '5'
+        })
+        response = self.client.get(f'/joke/{dummy_joke.id_joke}', follow=True)
+        self.assertContains(response, 'Ne možete oceniti svoj vic', html=True)
+
+    def test_grade_joke_SSU9_method_is_get(self):
+        dummy_joke = create_dummy_joke()
+        self.client.login(username='kor', password='kQ!:h9[T&B2,7*p{')
+        response = self.client.get(f'/grade_joke/{dummy_joke.id_joke}')
+        self.assertContains(response, 'Method nije POST', html=True)
+
+    def test_add_comment_SSU10_successful(self):
+        dummy_joke = create_dummy_joke()
+        self.client.login(username='kor', password='kQ!:h9[T&B2,7*p{')
+        self.client.post(f'/add_comment/{dummy_joke.id_joke}', data={
+            'comment_content': 'Test comment'
+        })
+        response = self.client.get(f'/joke/{dummy_joke.id_joke}', follow=True)
+        self.assertContains(response, 'Uspesno ste dodali komentar', html=True)
+
+    def test_add_comment_SSU10_comment_missing(self):
+        dummy_joke = create_dummy_joke()
+        self.client.login(username='kor', password='kQ!:h9[T&B2,7*p{')
+        self.client.post(f'/add_comment/{dummy_joke.id_joke}', data={
+            'comment_content': ''
+        })
+        response = self.client.get(f'/add_comment/{dummy_joke.id_joke}', follow=True)
+        self.assertContains(response, 'Niste uneli komentar', html=True)
