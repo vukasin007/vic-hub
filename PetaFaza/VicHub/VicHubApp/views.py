@@ -14,25 +14,50 @@ from .forms import *
 
 
 def is_guest(user):
+    """
+    funkcija proverava da li je korisnik ulogovan na sistem
+    :param user:User
+    :return boolean
+    """
     return not user.is_authenticated
 
 
 def is_moderator(user):
+    """
+    funkcija proverava da li je ulogovani korisnik moderator ili administrator
+    :param user:User
+    :return boolean
+    """
     return user.type=="M" or user.type=="A"
         #user.groups.filter(name='moderator').exists() or user.groups.filter(name='admin').exists()
 
 
 def is_admin(user):
+    """
+    funkcija proverava da li je ulogovani korisnik administrator
+    :param user:User
+    :return boolean
+    """
     return user.type=="A"
         #user.groups.filter(name='admin').exists()
 
 
 def index(request: HttpRequest):
+    """
+    funkcija vraća početnu stranicu sajta
+    :param request:HttpRequest
+    :return HttpResponse
+    """
     return render(request, 'index.html')
 
 
 @user_passes_test(is_guest, login_url='home', redirect_field_name=None)
-def register_req(request: HttpRequest): #gotovo
+def register_req(request: HttpRequest):
+    """
+    funkcija vraća stranicu za registraciju i obrađuje zahtev za registraciju
+    :param request:HttpRequest
+    :return HttpResponse
+    """
     form = CustomUserCreationForm(data=request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
@@ -51,6 +76,11 @@ def register_req(request: HttpRequest): #gotovo
 @login_required(login_url='login')
 @user_passes_test(is_admin, login_url='home', redirect_field_name=None)
 def register_admin_req(request: HttpRequest):
+    """
+    funkcija vraća stranicu za kreiranje korisnika od strane admina i obrađuje zahtev za kreiranje korisnika
+    :param request:HttpRequest
+    :return HttpResponse
+    """
     form = CustomUserCreationForm(data=request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
@@ -69,7 +99,12 @@ def register_admin_req(request: HttpRequest):
 
 
 @user_passes_test(is_guest, login_url='home', redirect_field_name=None)
-def login_req(request: HttpRequest): #gotovo
+def login_req(request: HttpRequest):
+    """
+    funkcija vraća stranicu za logovanje i obrađuje zahtev za logovanje
+    :param request:HttpRequest
+    :return HttpResponse
+    """
     form = AuthenticationForm(request=request, data=request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
@@ -92,6 +127,11 @@ def login_req(request: HttpRequest): #gotovo
 @login_required(login_url='login')
 @user_passes_test(is_admin, login_url='home', redirect_field_name=None)
 def admin_all_users(request: HttpRequest):
+    """
+    funkcija vraća stranicu sa svim korisnicima, dostupna je samo adminu
+    :param request:HttpRequest
+    :return HttpResponse
+    """
     return render(request, 'admin_all_users.html', {
         'users': User.objects.filter(Q(type='U') | Q(type='M')).filter(status="A")
     })
@@ -100,6 +140,11 @@ def admin_all_users(request: HttpRequest):
 @login_required(login_url='login')
 @user_passes_test(is_admin, login_url='home', redirect_field_name=None)
 def delete_user_admin(req: HttpRequest, user_id: int):
+    """
+    funkcija omogućava adminu da obriše korisnika i vraća mu stranicu sa pregledom svih korisnika
+    :param request:HttpRequest, user_id:int
+    :return HttpResponse
+    """
     user = User.objects.get(pk=user_id)
     user.status = 'B'
     user.subscribed = 'N'
@@ -128,7 +173,12 @@ def delete_user_admin(req: HttpRequest, user_id: int):
 
 @login_required(login_url='login')
 @user_passes_test(is_moderator, login_url='home', redirect_field_name=None)
-def delete_joke(request: HttpRequest, joke_id: int): #gotovo
+def delete_joke(request: HttpRequest, joke_id: int):
+    """
+    funkcija briše odabrani vic i vraća početnu stranicu
+    :param request:HttpRequest, joke_id:int
+    :return HttpResponse
+    """
     if request.method == 'GET':
         messages.error(request, 'Method nije POST')
         return render(request, 'index.html')
@@ -144,7 +194,12 @@ def delete_joke(request: HttpRequest, joke_id: int): #gotovo
     return redirect('home')
 
 
-def all_categories(request : HttpRequest): #comile #gotovo
+def all_categories(request : HttpRequest):
+    """
+    funkcija vraća stranicu sa svim kategorijama
+    :param request:HttpRequest
+    :return HttpResponse
+    """
     categories = Category.objects.all()
     context = {
         "categories": categories,
@@ -153,7 +208,12 @@ def all_categories(request : HttpRequest): #comile #gotovo
 
 
 # vukasin007
-def logout_req(request: HttpRequest): #gotovo
+def logout_req(request: HttpRequest):
+    """
+    funkcija odjavljue korisnika i vraća početnu stranicu
+    :param request:HttpRequest
+    :return HttpResponse
+    """
     try:
         logout(request)
         messages.info(request, 'Uspesna odjava!')
@@ -165,6 +225,11 @@ def logout_req(request: HttpRequest): #gotovo
 # vukasin007
 @login_required(login_url='login')
 def subscribe_to_bilten(request: HttpRequest):
+    """
+    funkcija prijavljuje korisnika na bilten i vraća stranicu sa podacima korisnika
+    :param request:HttpRequest
+    :return HttpResponse
+    """
     try:
         curruser = User.objects.get(username=request.user.get_username())
         curruser.subscribed = "Y"
@@ -178,6 +243,11 @@ def subscribe_to_bilten(request: HttpRequest):
 # vukasin007
 @login_required(login_url='login')
 def unsubscribe_from_bilten(request: HttpRequest):
+    """
+    funkcija odjavljue korisnika sa biltena i vraća stranicu sa podacima korisnika
+    :param request:HttpRequest
+    :return HttpResponse
+    """
     try:
         curruser = User.objects.get(username=request.user.get_username())
         curruser.subscribed = "N"
@@ -191,6 +261,11 @@ def unsubscribe_from_bilten(request: HttpRequest):
 # vukasin007
 @login_required(login_url='login')
 def request_mod(request: HttpRequest):
+    """
+    funkcija šalje zahtev ze promociju u moderatora i vraća početnu stranicu
+    :param request:HttpRequest
+    :return HttpResponse
+    """
     try:
         if is_moderator(request.user):
             messages.error(request, "Nemate pravo na ovu akciju")
@@ -214,6 +289,11 @@ def request_mod(request: HttpRequest):
 # vukasin007
 @login_required(login_url='login')
 def accept_mod_request(request: HttpRequest, request_id: int):
+    """
+    funkcija prihvata zahtev za moderatora koji ima identifikator request_id
+    :param request:HttpRequest , request_id:int
+    :return HttpResponse
+    """
     try:
         logedmod: User = User.objects.get(username=request.user.get_username())
         if logedmod.type != "A" and logedmod.type != "M":   # moze i preko group privilegija
@@ -238,6 +318,11 @@ def accept_mod_request(request: HttpRequest, request_id: int):
 # vukasin007
 @login_required(login_url='login')
 def reject_mod_request(request: HttpRequest, request_id: int):
+    """
+    funkcija odbija zahtev za moderatora koji ima identifikator request_id
+    :param request:HttpRequest , request_id:int
+    :return HttpResponse
+    """
     try:
         logedmod: User = User.objects.get(username=request.user.get_username())
         if logedmod.type != "A" and logedmod.type != "M":   # moze i preko group privilegija
@@ -255,7 +340,12 @@ def reject_mod_request(request: HttpRequest, request_id: int):
 
 # vukasin007
 @login_required(login_url='login')
-def remove_mod(request: HttpRequest, user_id: int): #fali template
+def remove_mod(request: HttpRequest, user_id: int):
+    """
+    funkcija oduzima moderatorske privilegije korisniku koji ima identifikator user_id
+    :param request:HttpRequest , user_id:int
+    :return HttpResponse
+    """
     try:
         logedmod: User = User.objects.get(username=request.user.get_username())
         if logedmod.type != "A":   # moze i preko group privilegija
@@ -277,6 +367,11 @@ def remove_mod(request: HttpRequest, user_id: int): #fali template
 @login_required(login_url='login')
 @user_passes_test(is_moderator, login_url='home', redirect_field_name=None)
 def all_requests_mod(request: HttpRequest):
+    """
+    funkcija vraća stranicu sa svim zahtevima za moderatora
+    :param request:HttpRequest
+    :return HttpResponse
+    """
     try:
         logedmod: User = User.objects.get(username=request.user.get_username())
         if logedmod.type != "A" and logedmod.type != "M":
@@ -294,7 +389,12 @@ def all_requests_mod(request: HttpRequest):
 
 # vukasin007
 @login_required(login_url='login')
-def pending_jokes(request: HttpRequest): #gotovo
+def pending_jokes(request: HttpRequest):
+    """
+    funkcija vraća stranicu sa svim vicevima koji iščekuju da budu odobreni
+    :param request:HttpRequest
+    :return HttpResponse
+    """
     try:
         logedmod: User = User.objects.get(username=request.user.get_username())
         if logedmod.type != "A" and logedmod.type != "M":
@@ -312,7 +412,12 @@ def pending_jokes(request: HttpRequest): #gotovo
 
 # vukasin007
 @login_required(login_url='login')
-def choose_category(request: HttpRequest, joke_id: int): #gotovo
+def choose_category(request: HttpRequest, joke_id: int):
+    """
+    funkcija vraća stranicu za odabir kategorije vica koji se odobrava
+    :param request:HttpRequest, joke_id:int
+    :return HttpResponse
+    """
     #if request.method == 'GET':
        # messages.error(request, 'Method nije POST')
        # return render(request, 'index.html')
@@ -333,13 +438,17 @@ def choose_category(request: HttpRequest, joke_id: int): #gotovo
 @login_required(login_url='login')
 @user_passes_test(is_moderator, login_url='home', redirect_field_name=None)
 def add_category(request: HttpRequest):
-
     return redirect('all_categories')
 
 
 # vukasin007
 @login_required(login_url='login')
-def accept_joke(request: HttpRequest, joke_id: int): #gotovo
+def accept_joke(request: HttpRequest, joke_id: int):
+    """
+    funkcija odobrava vic sa identifikatorom joke_id i vraća stranicu sa neodobrenim vicevima
+    :param request:HttpRequest, joke_id:int
+    :return HttpResponse
+    """
     try:
         logedmod: User = User.objects.get(username=request.user.get_username())
         if logedmod.type != "A" and logedmod.type != "M":   # moze i preko group privilegija
@@ -378,7 +487,12 @@ def accept_joke(request: HttpRequest, joke_id: int): #gotovo
 
 # vukasin007
 @login_required(login_url='login')
-def reject_joke(request: HttpRequest, joke_id: int): #gotovo
+def reject_joke(request: HttpRequest, joke_id: int):
+    """
+    funkcija odbija vic sa identifikatorom joke_id i vraća stranicu sa neodobrenim vicevima
+    :param request:HttpRequest, joke_id:int
+    :return HttpResponse
+    """
     try:
         logedmod: User = User.objects.get(username=request.user.get_username())
         if logedmod.type != "A" and logedmod.type != "M":
@@ -401,7 +515,12 @@ def reject_joke(request: HttpRequest, joke_id: int): #gotovo
 
 # vukasin007
 @login_required(login_url='login')
-def delete_comment(request: HttpRequest, comment_id: int): #gotovo
+def delete_comment(request: HttpRequest, comment_id: int):
+    """
+    funkcija uklanja komentar sa identifikatorom comment_id i vraća stranicu sa vicem na koji se komentar odnosio
+    :param request:HttpRequest, comment_id:int
+    :return HttpResponse
+    """
     logedmod: User = User.objects.get(username=request.user.get_username())
     if logedmod.type != "A" and logedmod.type != "M":  # moze i preko group privilegija
         messages.error(request, 'Nemate privilegije.')
@@ -420,7 +539,12 @@ def delete_comment(request: HttpRequest, comment_id: int): #gotovo
 # vukasin007
 @login_required(login_url='login')
 @user_passes_test(is_moderator, login_url='home', redirect_field_name=None)
-def add_category_req(request: HttpRequest): #fali template
+def add_category_req(request: HttpRequest):
+    """
+    funkcija vraća stranicu za kreiranje nove kategorije i kreira novu kategoriju
+    :param request:HttpRequest
+    :return HttpResponse
+    """
     logedmod: User = User.objects.get(username=request.user.get_username())
     if logedmod.type != "A" and logedmod.type != "M":  # moze i preko group privilegija
         messages.error(request, 'Nemate privilegije.')
@@ -437,7 +561,7 @@ def add_category_req(request: HttpRequest): #fali template
             kategorija.save()
             messages.info(request, 'Uspesno kreiranje nove kategorije!')
         except:
-            messages.info(request, 'Nespesno kreiranje nove kategorije.')
+            messages.info(request, 'Neuspesno kreiranje nove kategorije.')
         return redirect('all_categories')
     context = {
         'addCategoryForm': forma,
@@ -447,7 +571,12 @@ def add_category_req(request: HttpRequest): #fali template
 
 # vukasin007
 @login_required(login_url='login')
-def grade_joke(request: HttpRequest, joke_id: int): #gotovo
+def grade_joke(request: HttpRequest, joke_id: int):
+    """
+    funkcija ocenjuje vic sa identifikatorom joke_id i cuva ocenu
+    :param request:HttpRequest, joke_id:int
+    :return HttpResponse
+    """
     if request.method == 'GET':
         messages.error(request, 'Method nije POST')
         return render(request, 'index.html')
@@ -493,7 +622,12 @@ def grade_joke(request: HttpRequest, joke_id: int): #gotovo
 
 # vukasin007
 @login_required(login_url='login')
-def change_personal_data(request: HttpRequest): #fali template
+def change_personal_data(request: HttpRequest):
+    """
+    funkcija vraća stranicu sa formama za menjanje podataka i menja podatke ulogovanog korisnika
+    :param request:HttpRequest
+    :return HttpResponse
+    """
     curruser: User = User.objects.get(username=request.user.get_username())
     usernameForm = ChangeUsernameForm(data=request.POST or None)
     if usernameForm.is_valid():
@@ -557,7 +691,12 @@ def change_personal_data(request: HttpRequest): #fali template
     return render(request, 'change_data.html', context)
 
 
-def category_req(request: HttpRequest, category_id):  # comile #gotovo
+def category_req(request: HttpRequest, category_id):
+    """
+    funkcija vraća stranicu sa svim vicevima iz kategorije sa identifikatorom category_id
+    :param request:HttpRequest, category_id:int
+    :return HttpResponse
+    """
     belongings = BelongsTo.objects.filter(id_category=category_id)
     category = Category.objects.get(pk=category_id)
     jokes = []
@@ -572,7 +711,12 @@ def category_req(request: HttpRequest, category_id):  # comile #gotovo
     return render(request, 'content.html', context)
 
 
-def joke(request: HttpRequest, joke_id): #comile #gotovo
+def joke(request: HttpRequest, joke_id):
+    """
+    funkcija vraća stranicu sa sadržajem i komentarima vica sa identifikatorom vica joke_id
+    :param request:HttpRequest, joke_id:int
+    :return HttpResponse
+    """
     joke = Joke.objects.get(pk=joke_id)
     comments = Comment.objects.filter(id_joke=joke).filter(status="A")
     autor = User.objects.get(pk=joke.id_user_created.id_user)
@@ -585,7 +729,12 @@ def joke(request: HttpRequest, joke_id): #comile #gotovo
 
 
 @login_required(login_url='login')
-def add_joke(request: HttpRequest): #gotovo
+def add_joke(request: HttpRequest):
+    """
+    funkcija vraća stranicu za dodavanje vica i šalje unet sadržaj na odobravanje
+    :param request:HttpRequest
+    :return HttpResponse
+    """
     if request.method == 'POST':
         title = request.POST['joke_title']
         if (title.__len__() < 1):
@@ -607,12 +756,22 @@ def add_joke(request: HttpRequest): #gotovo
 
 
 @login_required(login_url='login')
-def profile(request: HttpRequest): #gotovo
+def profile(request: HttpRequest):
+    """
+    funkcija vraća stranicu sa podacima ulogovanog korisnika
+    :param request:HttpRequest
+    :return HttpResponse
+    """
     return render(request, 'profile.html')
 
 
 @login_required(login_url='login')
-def add_comment(request: HttpRequest, joke_id): #gotovo
+def add_comment(request: HttpRequest, joke_id):
+    """
+    funkcija vraća stranicu za dodavanje komentara na vic sa identifikatorom joke_id i kreira komentar
+    :param request:HttpRequest, joke_id:int
+    :return HttpResponse
+    """
     joke = Joke.objects.get(pk=joke_id)
     context = {
         "joke": joke
